@@ -1,0 +1,30 @@
+{
+  "train": {
+    "data": "data/train.csv",
+    "batch_size": 64,
+    "epochs": 10,
+    "learning_rate": 0.01,
+    "metrics": ["accuracy", "precision"],
+    "early_stopping": true,
+    "input_shape": 31,
+    "layers": [
+      {
+        "size": 32,
+        "activation": "relu"
+      },
+      {
+        "size": 16,
+        "activation": "relu"
+      },
+      {
+        "size": 2,
+        "activation": "softmax"
+      }
+    ],
+    "optimizer": "gd"
+  },
+  "test": {
+    "data": "data/test.csv",
+    "model": "model.bin"
+  }
+}

@@ -2,18 +2,23 @@
 #define OPTIMIZERS_HPP
 
 #include "layer.hpp"
+
 #include <vector>
 
-class Optimizer { // pure base class
-public:
-    virtual void update(std::vector<Layer>&){}
+
+class Optimizer
+{ // pure base class
+  public:
+    virtual void update(std::vector<Layer>&) {}
     virtual ~Optimizer() {}
 };
 
-class GradientDescent:public Optimizer {
-private:
+class GradientDescent : public Optimizer
+{
+  private:
     double learning_rate;
-public:
+
+  public:
     GradientDescent(double);
     void update(std::vector<Layer>&) override;
 };

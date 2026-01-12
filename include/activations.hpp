@@ -7,9 +7,8 @@
 
 using namespace Eigen;
 
-MatrixXd    relu(const MatrixXd&, bool);
-MatrixXd    sigmoid(const MatrixXd&, bool);
-MatrixXd    softmax(const MatrixXd&, bool);
+MatrixXd relu(const MatrixXd&, bool);
+MatrixXd sigmoid(const MatrixXd&, bool);
+MatrixXd softmax(const MatrixXd&, bool);
 
 #endif
-

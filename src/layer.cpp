@@ -5,13 +5,25 @@
 std::unordered_map<std::string, std::function<MatrixXd(const MatrixXd&, bool)>>
     Layer::activationMap = {{"relu", relu}, {"sigmoid", sigmoid}, {"softmax", softmax}};
 
+
+Layer::Layer():size(0), input_shape(0)
+{
+    this->activation = this->activationMap["relu"];
+
+    this->activation__      = "relu";
+    this->weights  = MatrixXd::Zero(input_shape, size);// * std_dev;
+    this->biases = RowVectorXd::Zero(size);
+    this->weights_gradients = MatrixXd::Zero(input_shape, size);
+    this->biases_gradients  = RowVectorXd::Zero(size);
+}
+
 Layer::Layer(unsigned int input_shape, unsigned int size, const std::string& activation_)
     : size(size), input_shape(input_shape)
 {
     this->activation = this->activationMap[activation_];
 
-    this->activation__ = activation_;
-
+    this->activation__      = activation_;
+    // this->activation_length = activation_.length();
     // 1. Initialize Weights (OutputSize x InputSize)
     // Using a random normal distribution scaled for "He Initialization"
     // He Init: std_dev = sqrt(2.0 / input_shape)

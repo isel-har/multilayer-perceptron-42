@@ -10,11 +10,11 @@
 #include "json_loader.hpp"
 #include "visualizer.hpp"
 #include "csv_split.hpp"
-
+#include "metrics.hpp"
 
 int     cmd_split();
 int     cmd_train(const char* config_path);
-// int     cmd_predict(const char *model_path);
+int     cmd_predict(const char *model_path);
 void    print_usage(const char* prog);
 
 #endif

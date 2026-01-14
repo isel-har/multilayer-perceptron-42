@@ -6,7 +6,10 @@ std::unordered_map<std::string, Metric*> MLPClassifier::metricsMap = {
     {"loss", new BinarycrossEntropy()}
 };
 
-MLPClassifier::MLPClassifier(const json& conf) : built(false), earlystopping(false)
+MLPClassifier::MLPClassifier():built(false), loaded(false), confptr(nullptr), earlystopping(false)
+{}
+
+MLPClassifier::MLPClassifier(const json& conf) : built(false), loaded(false),earlystopping(false)
 {
     this->confptr = &conf;
 }
@@ -184,18 +187,24 @@ History MLPClassifier::fit(const t_split& dataset)
     return history;
 }
 
+MatrixXd MLPClassifier::predict(const MatrixXd& x, bool argmaxed = false)
+{   
+    MatrixXd logits = this->feed(x);
+    return  argmaxed ? this->argmax(logits) : logits;
+}
+
 void MLPClassifier::save(const std::string &name) const
 {
     std::ofstream file(name, std::ios::binary);
     if (!file)
         throw std::runtime_error("Failed to open file for saving model.");
 
-    size_t total_layers = layers.size();
+    size_t total_layers = this->layers.size();
     file.write(reinterpret_cast<const char*>(&total_layers), sizeof(total_layers));
 
     for (const auto& layer : layers)
     {
-        unsigned int size = layer.size; // number of neurons in this layer
+        unsigned int size = layer.size;
         unsigned int rows = (unsigned int) layer.weights.rows();
         unsigned int cols = (unsigned int) layer.weights.cols();
         // Write per-layer metadata
@@ -220,4 +229,58 @@ void MLPClassifier::save(const std::string &name) const
         }
     }
     std::cout << '\'' << name + "\' saved\n";
+}
+
+
+void    MLPClassifier::load(const std::string& model_path)
+{
+    std::ifstream file(model_path, std::ios::binary);
+    if (!file)
+        throw std::runtime_error("Failed to load the model." + std::string(model_path));
+
+    size_t total_layers;
+    file.read(reinterpret_cast<char*>(&total_layers), sizeof(total_layers));
+
+    for (size_t i = 0; i < total_layers; ++i)
+    {
+        layers.push_back(Layer());
+    }
+
+    for (auto& layer : layers)
+    {
+        unsigned int size;
+        unsigned int rows;
+        unsigned int cols;
+
+        file.read(reinterpret_cast<char*>(&size), sizeof(size));
+        file.read(reinterpret_cast<char*>(&rows), sizeof(rows));
+        file.read(reinterpret_cast<char*>(&cols), sizeof(cols));
+
+        std::string activation;
+        size_t activation_length;
+        file.read(reinterpret_cast<char*>(&activation_length), sizeof(activation_length));
+        file.read(activation.data(), activation_length);
+
+        layer.activation__      = activation;
+
+        layer.size              = size;
+        layer.weights           = MatrixXd::Zero(input_shape, size);
+        layer.biases            = RowVectorXd::Zero(size);
+        layer.weights_gradients = MatrixXd::Zero(input_shape, size);
+        layer.biases_gradients  = RowVectorXd::Zero(size);
+
+        for (unsigned int i = 0; i < cols; ++i)
+        {
+            for (unsigned int j = 0; j < rows; ++j)
+            {
+                file.read(reinterpret_cast<char*>(&layer.weights(j, i)), sizeof(double));
+            }
+        }
+
+        for (unsigned int i = 0; i < size; ++i)
+        {
+            file.read(reinterpret_cast<char*>(&layer.biases(0, i)), sizeof(double));
+        }
+    }
+    std::cout << '\'' << model_path << "\' loaded\n";
 }

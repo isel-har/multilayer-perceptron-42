@@ -67,7 +67,22 @@ int cmd_train(const char* config_path)
 
     return EXIT_SUCCESS;
 }
-// int cmd_predict(const char *model_path)
-// {
-//     return 1;
-// }
+
+int cmd_predict(const char *model_path)
+{
+    MLPClassifier                   model;
+    double                          loss;
+    MatrixXd                        y_preds;
+    std::pair<MatrixXd, MatrixXd>   xy_pair;
+
+    model = MLPClassifier();
+    model.load(std::string(model_path));
+
+    xy_pair       = csv_to_eigen("data/data.csv");
+    xy_pair.first = StandardScaler(xy_pair.first);
+    y_preds       = model.predict(xy_pair.first, false);
+    loss          = BinarycrossEntropy().compute(y_preds, xy_pair.second);
+
+    std::cout << "model loss evaluation :" << loss << "\n";
+    return EXIT_SUCCESS;
+}

@@ -24,8 +24,8 @@ int run(int argc, char** argv)
 
         if (op == "train")
             return cmd_train(argv[2]);
-        // else
-            // return cmd_predict(argv[2]);
+        else
+            return cmd_predict(argv[2]);
 
         std::cerr << "Error: test not implemented yet\n";
         return EXIT_FAILURE;

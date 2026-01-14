@@ -27,7 +27,9 @@ class MLPClassifier
   unsigned int batch_size;
   unsigned int input_shape;
   bool         built;
-  
+  bool         loaded;
+
+
   std::vector<Layer>                           layers;
   
   Optimizer*    optimizer = nullptr;
@@ -43,15 +45,15 @@ class MLPClassifier
     MLPClassifier(const json&);
     ~MLPClassifier();
 
-    void    load();
+    void    load(const std::string &model_path);
     void    save(const std::string &name) const;
     void    build(unsigned int);
     History fit(const t_split&);
 
     std::vector<json> default_layers();
 
-    MatrixXd predict(const MatrixXd&);
     MatrixXd argmax(const MatrixXd&) const;
+    MatrixXd predict(const MatrixXd& x, bool argmaxed);
 
     void train_val_metrics(unsigned int epoch, const t_split& dataset, History& history);
 };

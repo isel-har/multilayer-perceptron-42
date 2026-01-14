@@ -17,7 +17,7 @@ class Layer
     unsigned int                                   input_shape;
     std::function<MatrixXd(const MatrixXd&, bool)> activation;
 
-    std::string activation__; // needed for save/load
+    std::string activation__;
 
     MatrixXd    weights;
     RowVectorXd biases;
@@ -33,6 +33,7 @@ class Layer
     MatrixXd z_cache;
 
     Layer(unsigned int, unsigned int, const std::string&);
+    Layer();
     ~Layer();
 
     MatrixXd forward(const MatrixXd&);

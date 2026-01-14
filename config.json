@@ -11,27 +11,11 @@
       "metrics": ["accuracy", "precision"],
       "layers": [
         {
-          "size": 64,
-          "activation": "relu"
-        },
-        {
           "size": 32,
           "activation": "relu"
         },
         {
-          "size": 2,
-          "activation": "softmax"
-        }
-      ]
-    },
-    {
-      "batch_size": 64,
-      "epochs": 20,
-      "learning_rate": 0.01,
-      "metrics": ["accuracy", "precision"],
-      "layers": [
-        {
-          "size": 32,
+          "size": 16,
           "activation": "relu"
         },
         {

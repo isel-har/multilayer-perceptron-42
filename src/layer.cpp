@@ -23,17 +23,9 @@ Layer::Layer(unsigned int input_shape, unsigned int size, const std::string& act
     this->activation = this->activationMap[activation_];
 
     this->activation__      = activation_;
-    // this->activation_length = activation_.length();
-    // 1. Initialize Weights (OutputSize x InputSize)
-    // Using a random normal distribution scaled for "He Initialization"
-    // He Init: std_dev = sqrt(2.0 / input_shape)
     double std_dev = std::sqrt(2.0 / input_shape);
     this->weights  = MatrixXd::Random(input_shape, size) * std_dev;
-    // 2. Initialize Biases (OutputSize x 1)
-    // Biases are usually initialized to zero or a small constant
     this->biases = RowVectorXd::Zero(size);
-    // 3. Prepare Gradient placeholders
-    // Pre-sizing these prevents re-allocation during backprop
     this->weights_gradients = MatrixXd::Zero(input_shape, size);
     this->biases_gradients  = RowVectorXd::Zero(size);
 }

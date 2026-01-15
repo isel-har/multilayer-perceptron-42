@@ -205,24 +205,23 @@ void MLPClassifier::save(const std::string &name) const
     for (const auto& layer : layers)
     {
         unsigned int size = layer.size;
-        unsigned int rows = (unsigned int) layer.weights.rows();
-        unsigned int cols = (unsigned int) layer.weights.cols();
-        // Write per-layer metadata
+        unsigned int input_shape = layer.input_shape;
+
         file.write(reinterpret_cast<const char*>(&size), sizeof(size));
-        file.write(reinterpret_cast<const char*>(&rows), sizeof(rows));
-        file.write(reinterpret_cast<const char*>(&cols), sizeof(cols));
+        file.write(reinterpret_cast<const char*>(&input_shape), sizeof(input_shape));
 
         size_t activation_length = layer.activation__.length();
         file.write(reinterpret_cast<const char*>(&activation_length), sizeof(activation_length));
         file.write(layer.activation__.c_str(), activation_length);
 
-        for (unsigned int i = 0; i < cols; ++i)
+        for (unsigned int i = 0; i < input_shape; ++i)
         {
-            for (unsigned int j = 0; j < rows; ++j)
+            for (unsigned int j = 0; j < size; ++j)
             {
-                file.write(reinterpret_cast<const char*>(&layer.weights(j, i)), sizeof(double));
+                file.write(reinterpret_cast<const char*>(&layer.weights(i, j)), sizeof(double));
             }
         }
+    
         for (unsigned int i = 0; i < size; ++i)
         {
             file.write(reinterpret_cast<const char*>(&layer.biases(0, i)), sizeof(double));
@@ -231,56 +230,49 @@ void MLPClassifier::save(const std::string &name) const
     std::cout << '\'' << name + "\' saved\n";
 }
 
-
-void    MLPClassifier::load(const std::string& model_path)
+void MLPClassifier::load(const std::string& model_path)
 {
     std::ifstream file(model_path, std::ios::binary);
     if (!file)
-        throw std::runtime_error("Failed to load the model." + std::string(model_path));
+        throw std::runtime_error("Failed to load the model: " + model_path);
+
+    layers.clear();
 
     size_t total_layers;
     file.read(reinterpret_cast<char*>(&total_layers), sizeof(total_layers));
 
-    for (size_t i = 0; i < total_layers; ++i)
-    {
-        layers.push_back(Layer());
-    }
+    layers.resize(total_layers);
 
     for (auto& layer : layers)
     {
-        unsigned int size;
-        unsigned int rows;
-        unsigned int cols;
+        unsigned int size, input_shape;
 
         file.read(reinterpret_cast<char*>(&size), sizeof(size));
-        file.read(reinterpret_cast<char*>(&rows), sizeof(rows));
-        file.read(reinterpret_cast<char*>(&cols), sizeof(cols));
+        file.read(reinterpret_cast<char*>(&input_shape), sizeof(input_shape));
 
-        std::string activation;
         size_t activation_length;
         file.read(reinterpret_cast<char*>(&activation_length), sizeof(activation_length));
-        file.read(activation.data(), activation_length);
 
-        layer.activation__      = activation;
+        std::string activation;
+        activation.resize(activation_length);
+        file.read(&activation[0], activation_length);
 
-        layer.size              = size;
-        layer.weights           = MatrixXd::Zero(input_shape, size);
-        layer.biases            = RowVectorXd::Zero(size);
+        layer.activation__ = activation;
+        layer.size = size;
+
+        layer.weights = MatrixXd::Zero(input_shape, size);
+        layer.biases  = RowVectorXd::Zero(size);
+
         layer.weights_gradients = MatrixXd::Zero(input_shape, size);
         layer.biases_gradients  = RowVectorXd::Zero(size);
 
-        for (unsigned int i = 0; i < cols; ++i)
-        {
-            for (unsigned int j = 0; j < rows; ++j)
-            {
-                file.read(reinterpret_cast<char*>(&layer.weights(j, i)), sizeof(double));
-            }
-        }
+        for (unsigned int i = 0; i < input_shape; ++i)
+            for (unsigned int j = 0; j < size; ++j)
+                file.read(reinterpret_cast<char*>(&layer.weights(i, j)), sizeof(double));
 
         for (unsigned int i = 0; i < size; ++i)
-        {
             file.read(reinterpret_cast<char*>(&layer.biases(0, i)), sizeof(double));
-        }
     }
-    std::cout << '\'' << model_path << "\' loaded\n";
+
+    std::cout << "'" << model_path << "' loaded\n";
 }

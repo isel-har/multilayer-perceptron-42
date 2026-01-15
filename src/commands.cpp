@@ -11,9 +11,7 @@ void    print_usage(const char* prog)
 
 int cmd_split()
 {
-    auto records        = csv_to_rawstrs("data/data.csv");
-    auto train_val_pair = split_rows(&records, 0.2f);
-    save_split_data("data/", &train_val_pair);
+    save_split_scaled_data("data/data.csv", records);
     return EXIT_SUCCESS;
 }
 

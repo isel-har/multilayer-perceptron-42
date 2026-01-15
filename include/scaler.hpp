@@ -3,6 +3,17 @@
 
 #include <Eigen/Dense>
 
-Eigen::MatrixXd StandardScaler(const Eigen::MatrixXd&);
+using namespace Eigen;
+
+class Scaler
+{
+    public:
+        MatrixXd    mean;
+        MatrixXd    std;
+
+        
+        MatrixXd    fit_transform(const Eigen::MatrixXd&);
+        void        save() const;
+};
 
 #endif

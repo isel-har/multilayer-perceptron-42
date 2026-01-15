@@ -7,13 +7,14 @@
 #include <random>
 #include <utility>
 #include <vector>
-
+#include "scaler.hpp"
+#include "csv_to_eigen.hpp"
 
 std::pair<std::vector<std::string>, std::vector<std::string>> split_rows(std::vector<std::string>*,
                                                                          float);
 std::vector<std::string>                                      csv_to_rawstrs(const char* h);
 void shuffle_rows(std::vector<std::string>*);
-void save_split_data(const std::string&,
+void save_split_scaled_data(const std::string&,
                         std::pair<std::vector<std::string>, std::vector<std::string>>*);
 
 #endif

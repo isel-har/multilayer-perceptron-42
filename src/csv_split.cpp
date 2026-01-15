@@ -49,24 +49,28 @@ split_rows(std::vector<std::string>* rowsptr, float test_size)
     return split_pair;
 }
 
-void save_split_data(
-    const std::string&                                             path,
-    std::pair<std::vector<std::string>, std::vector<std::string>>* splitted_data)
+void save_split_scaled_data(const std::string& path, std::vector<std::string> &rawdata)
 {
-    std::ofstream trainf(path + "data_train.csv");
-    std::ofstream valf(path + "data_val.csv");
+    auto scaler = Scaler();
+    std::pair<MatrixXd, MatrixXd> xy_pair = csv_to_eigen(path);
 
-    size_t i = 0;
-    while (i < splitted_data->first.size())
-    {
-        trainf << splitted_data->first.at(i) + "\n";
-        ++i;
-    }
-    i = 0;
-    while (i < splitted_data->second.size())
-    {
-        valf << splitted_data->second.at(i) + "\n";
-        ++i;
-    }
-    std::cout << "data_train.csv and data_val.csv are saved.\n";
+
+
+
+    // std::ofstream trainf(path + "data_train.csv");
+    // std::ofstream valf(path + "data_val.csv");
+
+    // size_t i = 0;
+    // while (i < split_data->first.size())
+    // {
+    //     trainf << split_data->first.at(i) + "\n";
+    //     ++i;
+    // }
+    // i = 0;
+    // while (i < split_data->second.size())
+    // {
+    //     valf << split_data->second.at(i) + "\n";
+    //     ++i;
+    // }
+    // std::cout << "data_train.csv and data_val.csv are saved.\n";
 }

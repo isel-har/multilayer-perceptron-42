@@ -2,20 +2,25 @@
 #define CSV_TO_EIGEN_HPP
 
 #include "rapidcsv.h"
+#include "scaler.hpp"
 
 #include <Eigen/Dense>
 #include <utility>
 
 using namespace Eigen;
 
-typedef struct DatasetSplit
+struct DatasetSplit
 {
     MatrixXd X_train;
     MatrixXd y_train;
     MatrixXd X_val;
     MatrixXd y_val;
-} t_split;
+};
 
-std::pair<MatrixXd, MatrixXd> csv_to_eigen(rapidcsv::Document& doc, ssize_t index_remove, bool encode_y);
+MatrixXd        doc_to_eigen_encoded(const rapidcsv::Document& doc);
+MatrixXd        doc_to_eigen(const rapidcsv::Document& doc);
+DatasetSplit    train_val_split();
+
+
 
 #endif

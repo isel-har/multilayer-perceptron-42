@@ -22,7 +22,7 @@ MLPClassifier::~MLPClassifier()
     }
 }
 
-void MLPClassifier::train_val_metrics(unsigned int epoch, const t_split& dataset, History& history)
+void MLPClassifier::train_val_metrics(unsigned int epoch, const DatasetSplit& dataset, History& history)
 {
     MatrixXd ypred_train = this->feed(dataset.X_train);
     MatrixXd ypred_val   = this->feed(dataset.X_val);
@@ -153,7 +153,7 @@ MatrixXd MLPClassifier::argmax(const MatrixXd& y_probs) const
     return result;
 }
 
-History MLPClassifier::fit(const t_split& dataset)
+History MLPClassifier::fit(const DatasetSplit& dataset)
 {
     if (!this->built)
         throw std::runtime_error("build required before training phase.");

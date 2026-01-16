@@ -1,7 +1,7 @@
 [
     {
       "batch_size": 128,
-      "epochs": 14,
+      "epochs": 10,
       "learning_rate": 0.01,
       "metrics": ["accuracy", "precision"],
       "layers": [
@@ -11,6 +11,10 @@
         },
         {
           "size": 16,
+          "activation": "relu"
+        },
+        {
+          "size": 8,
           "activation": "relu"
         },
         {

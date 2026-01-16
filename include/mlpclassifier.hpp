@@ -48,14 +48,14 @@ class MLPClassifier
     void    load(const std::string &model_path);
     void    save(const std::string &name) const;
     void    build(unsigned int);
-    History fit(const t_split&);
+    History fit(const DatasetSplit&);
 
     std::vector<json> default_layers();
 
     MatrixXd argmax(const MatrixXd&) const;
     MatrixXd predict(const MatrixXd& x, bool argmaxed);
 
-    void train_val_metrics(unsigned int epoch, const t_split& dataset, History& history);
+    void train_val_metrics(unsigned int epoch, const DatasetSplit& dataset, History& history);
 };
 
 static std::unordered_map<std::string, Metric*> metricsMap;

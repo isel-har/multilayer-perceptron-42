@@ -43,10 +43,10 @@ void    save_split(const rapidcsv::Document& shuffled_doc, size_t val_size)
 void    save_scale(rapidcsv::Document& doc)
 {
     doc.RemoveColumn(1);
-    std::pair<MatrixXd, MatrixXd> pair = csv_to_eigen(doc);
-    RowVectorXd mean     = pair.first.colwise().mean();
-    MatrixXd    centered = pair.first.rowwise() - mean;
-    RowVectorXd std_dev  = (centered.array().square().colwise().sum() / pair.first.rows()).sqrt();
+    MatrixXd X = doc_to_eigen(doc);
+    RowVectorXd mean     = X.colwise().mean();
+    MatrixXd    centered = X.rowwise() - mean;
+    RowVectorXd std_dev  = (centered.array().square().colwise().sum() / X.rows()).sqrt();
 
     for (int i = 0; i < std_dev.size(); ++i)
     {

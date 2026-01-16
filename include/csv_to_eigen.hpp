@@ -6,7 +6,6 @@
 #include <Eigen/Dense>
 #include <utility>
 
-
 using namespace Eigen;
 
 typedef struct DatasetSplit
@@ -17,6 +16,6 @@ typedef struct DatasetSplit
     MatrixXd y_val;
 } t_split;
 
-std::pair<MatrixXd, MatrixXd> csv_to_eigen(rapidcsv::Document& doc);
+std::pair<MatrixXd, MatrixXd> csv_to_eigen(rapidcsv::Document& doc, ssize_t index_remove, bool encode_y);
 
 #endif

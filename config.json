@@ -1,9 +1,4 @@
-{
-  "data": {
-    "val": "data/data_val.csv",
-    "train": "data/data_train.csv"
-  },
-  "models": [
+[
     {
       "batch_size": 128,
       "epochs": 14,
@@ -24,5 +19,4 @@
         }
       ]
     }
-  ]
-}
+]

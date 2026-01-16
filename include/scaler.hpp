@@ -2,18 +2,20 @@
 #define SCALER_HPP
 
 #include <Eigen/Dense>
+#include <fstream>
 
 using namespace Eigen;
 
 class Scaler
 {
     public:
-        MatrixXd    mean;
-        MatrixXd    std;
-
+        RowVectorXd mean;
+        RowVectorXd std_dev;
+        bool        loaded;
         
-        MatrixXd    fit_transform(const Eigen::MatrixXd&);
-        void        save() const;
+        Scaler(const std::string &);
+        Scaler();
+        void   fit_transform(MatrixXd&);
 };
 
 #endif

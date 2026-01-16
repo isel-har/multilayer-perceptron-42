@@ -54,16 +54,14 @@ void    save_scale(rapidcsv::Document& doc)
             std_dev(i) = 1.0;
     }
     std::ofstream ofs("scaler_params.bin", std::ios::binary);
-    if (ofs.is_open()) {
-        int size = static_cast<int>(mean.size());
-        ofs.write(reinterpret_cast<const char*>(&size), sizeof(int));
-        ofs.write(reinterpret_cast<const char*>(mean.data()), size * sizeof(double));
-        ofs.write(reinterpret_cast<const char*>(std_dev.data()), size * sizeof(double));
-        ofs.close();
-        std::cout << "scaling parameters saved." << std::endl;
-    } else {
-        std::cerr << "Error: Could not open file for writing." << std::endl;
-    }
+    if (!ofs.is_open())
+        throw std::runtime_error("Error: Could not open file for writing.");
+    int size = static_cast<int>(mean.size());
+    ofs.write(reinterpret_cast<const char*>(&size), sizeof(int));
+    ofs.write(reinterpret_cast<const char*>(mean.data()), size * sizeof(double));
+    ofs.write(reinterpret_cast<const char*>(std_dev.data()), size * sizeof(double));
+    ofs.close();
+    std::cout << "scaling parameters saved." << std::endl;
 }
 
 void save_split_scaler(const std::string& path, size_t val_size)

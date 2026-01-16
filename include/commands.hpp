@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 
-// #include "train_val_split.hpp"
 #include "mlpclassifier.hpp"
 #include "json_loader.hpp"
 #include "visualizer.hpp"

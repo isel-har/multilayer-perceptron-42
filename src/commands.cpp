@@ -17,20 +17,32 @@ int cmd_split()
 
 int cmd_train(const char* config_path)
 {
-    (void) config_path;
-    // load split and scale files!
-    // json conf = load_json(config_path);
+    json models_json = load_json(config_path);
+    auto scaler = Scaler("scaler_params.bin");
+    std::cout << "params loaded\n";
+    t_split   datasplit;
+    {
+        rapidcsv::Document trainDoc("data/data_train.csv", rapidcsv::LabelParams(-1, -1));
+        rapidcsv::Document valDoc("data/data_val.csv", rapidcsv::LabelParams(-1, -1));
 
-    // t_split datasplit =
-    //     train_val_split(conf["data"]["train"], conf["data"]["val"]);
+        std::pair<MatrixXd, MatrixXd> train_pair = csv_to_eigen(trainDoc);
+        std::pair<MatrixXd, MatrixXd> val_pair   = csv_to_eigen(valDoc);
+        std::cout << "csv to egein passed\n";
+        datasplit.X_train = scaler.fit_transform(train_pair.first);
+        std::cout << "problem in fit transform\n";
+        datasplit.X_val   = scaler.fit_transform(val_pair.first);
 
+        datasplit.y_train = train_pair.second;
+        datasplit.y_val   = val_pair.second;
+    }
+    (void)datasplit;
     // std::vector<MLPClassifier> models;
     // std::vector<History> histories;
 
-    // if (!conf.contains("models") || conf["models"].empty())
-    //     models.emplace_back(conf);
+    // if (!models_json.size())
+    //     models.emplace_back(models_json);
     // else
-    //     for (const auto& jmodel : conf["models"])
+    //     for (const auto& jmodel : models_json)
     //         models.emplace_back(jmodel);
 
     // const unsigned int input_shape =

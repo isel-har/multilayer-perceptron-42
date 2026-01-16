@@ -1,6 +1,6 @@
 #include "csv_to_eigen.hpp"
 
-std::pair<MatrixXd, MatrixXd> csv_to_eigen(rapidcsv::Document &doc)
+std::pair<MatrixXd, MatrixXd> csv_to_eigen(rapidcsv::Document &doc, ssize_t index_remove, bool encode_y)// !!!!
 {
     std::pair<MatrixXd, MatrixXd> xy;
     size_t                        rowsize;
@@ -16,9 +16,10 @@ std::pair<MatrixXd, MatrixXd> csv_to_eigen(rapidcsv::Document &doc)
         size_t index        = (yv[i] == 'M') ? 0 : 1;
         xy.second(i, index) = 1.0;
     }
-    doc.RemoveColumn(1);
+    if (index_remove != -1)
+        doc.RemoveColumn(index_remove);
+    
     colsize = doc.GetColumnCount();
-
     xy.first = MatrixXd(rowsize, colsize);
 
     for (size_t i = 0; i < colsize; ++i)

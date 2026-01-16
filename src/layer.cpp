@@ -11,24 +11,36 @@ Layer::Layer():size(0), input_shape(0)
     this->activation = this->activationMap["relu"];
 
     this->activation__      = "relu";
-    this->weights  = MatrixXd::Zero(input_shape, size);// * std_dev;
+    this->weights  = MatrixXd::Zero(input_shape, size);
     this->biases = RowVectorXd::Zero(size);
     this->weights_gradients = MatrixXd::Zero(input_shape, size);
     this->biases_gradients  = RowVectorXd::Zero(size);
 }
 
-Layer::Layer(unsigned int input_shape, unsigned int size, const std::string& activation_)
+Layer::Layer(unsigned int input_shape,
+             unsigned int size,
+             const std::string& activation_,
+             bool zeros)
     : size(size), input_shape(input_shape)
 {
     this->activation = this->activationMap[activation_];
+    this->activation__ = activation_;
 
-    this->activation__      = activation_;
-    double std_dev = std::sqrt(2.0 / input_shape);
-    this->weights  = MatrixXd::Random(input_shape, size) * std_dev;
+    if (zeros)
+    {
+        this->weights = MatrixXd::Zero(input_shape, size);
+    }
+    else
+    {
+        double std_dev = std::sqrt(2.0 / input_shape);
+        this->weights = MatrixXd::Random(input_shape, size) * std_dev;
+    }
+
     this->biases = RowVectorXd::Zero(size);
     this->weights_gradients = MatrixXd::Zero(input_shape, size);
     this->biases_gradients  = RowVectorXd::Zero(size);
 }
+
 
 MatrixXd Layer::forward(const MatrixXd& input)
 {

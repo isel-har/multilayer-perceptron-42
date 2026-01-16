@@ -113,11 +113,11 @@ void MLPClassifier::build(unsigned int shape)
     checked_layers(layers_json);
     
     this->layers.emplace_back(shape, layers_json[0]["size"],
-                              layers_json[0]["activation"]);
+                              layers_json[0]["activation"], false);
     for (size_t i = 1; i < layers_json.size(); ++i)
     {
         unsigned int shape = layers_json[i - 1]["size"];
-        this->layers.emplace_back(shape, layers_json[i]["size"], layers_json[i]["activation"]);
+        this->layers.emplace_back(shape, layers_json[i]["size"], layers_json[i]["activation"], false);
     }
     this->built = true;
 }
@@ -236,16 +236,15 @@ void MLPClassifier::load(const std::string& model_path)
     if (!file)
         throw std::runtime_error("Failed to load the model: " + model_path);
 
-    layers.clear();
-
     size_t total_layers;
     file.read(reinterpret_cast<char*>(&total_layers), sizeof(total_layers));
 
-    layers.resize(total_layers);
+    this->layers.reserve(total_layers);
 
-    for (auto& layer : layers)
+    for (size_t i = 0; i < total_layers; ++i)
     {
-        unsigned int size, input_shape;
+        unsigned int size = 0;
+        unsigned int input_shape = 0;
 
         file.read(reinterpret_cast<char*>(&size), sizeof(size));
         file.read(reinterpret_cast<char*>(&input_shape), sizeof(input_shape));
@@ -257,22 +256,26 @@ void MLPClassifier::load(const std::string& model_path)
         activation.resize(activation_length);
         file.read(&activation[0], activation_length);
 
-        layer.activation__ = activation;
-        layer.size = size;
+        this->layers.emplace_back(input_shape, size, activation, true);
+        auto &layer = this->layers.back();
 
-        layer.weights = MatrixXd::Zero(input_shape, size);
-        layer.biases  = RowVectorXd::Zero(size);
-
-        layer.weights_gradients = MatrixXd::Zero(input_shape, size);
-        layer.biases_gradients  = RowVectorXd::Zero(size);
+        /* FORCE correct shapes */
+        // layer.weights.resize(input_shape, size);
+        // layer.biases.resize(1, size);
 
         for (unsigned int i = 0; i < input_shape; ++i)
+        {
             for (unsigned int j = 0; j < size; ++j)
+            {
                 file.read(reinterpret_cast<char*>(&layer.weights(i, j)), sizeof(double));
+            }
+        }
 
         for (unsigned int i = 0; i < size; ++i)
+        {
             file.read(reinterpret_cast<char*>(&layer.biases(0, i)), sizeof(double));
-    }
+        }
 
+    }
     std::cout << "'" << model_path << "' loaded\n";
 }

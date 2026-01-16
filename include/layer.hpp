@@ -32,7 +32,7 @@ class Layer
     MatrixXd input_cache; // to change!
     MatrixXd z_cache;
 
-    Layer(unsigned int, unsigned int, const std::string&);
+    Layer(unsigned int, unsigned int, const std::string&, bool);
     Layer();
     ~Layer();
 

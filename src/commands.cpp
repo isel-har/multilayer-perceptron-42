@@ -21,7 +21,6 @@ int cmd_train(const char* config_path)
     DatasetSplit datasplit   = train_val_split();
 
 
-
     std::vector<MLPClassifier> models;
     std::vector<History> histories;
 

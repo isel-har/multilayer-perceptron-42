@@ -124,6 +124,9 @@ void MLPClassifier::build(unsigned int shape)
 
 MatrixXd MLPClassifier::feed(const MatrixXd& x)
 {
+    if (layers[0].weights.rows() != x.cols())
+        throw std::runtime_error("input cols not equal to weights rows.");
+
     MatrixXd feed = layers[0].forward(x);
     for (size_t i = 1; i < this->layers.size(); ++i)
     {
@@ -142,14 +145,26 @@ void MLPClassifier::backward(const MatrixXd& dl_out)
     }
 }
 
+// MatrixXd MLPClassifier::argmax(const MatrixXd& y_probs) const
+// {
+//     MatrixXd result = MatrixXd::Zero(y_probs.rows(), y_probs.cols());
+//     for (size_t i = 0; i < (size_t) y_probs.rows(); ++i)
+//     {
+//         size_t index     = (y_probs(i, 0) > y_probs(i, 1)) ? 0 : 1;
+//         result(i, index) = 1.0f;
+//     }
+//     return result;
+// }
+
 MatrixXd MLPClassifier::argmax(const MatrixXd& y_probs) const
 {
     MatrixXd result = MatrixXd::Zero(y_probs.rows(), y_probs.cols());
-    for (size_t i = 0; i < (size_t) y_probs.rows(); ++i)
-    {
-        size_t index     = (y_probs(i, 0) > y_probs(i, 1)) ? 0 : 1;
-        result(i, index) = 1.0f;
-    }
+
+    auto mask = (y_probs.col(0).array() > y_probs.col(1).array());
+
+    result.col(0) = mask.cast<double>();
+    result.col(1) = (!mask).cast<double>();
+
     return result;
 }
 
@@ -188,7 +203,7 @@ History MLPClassifier::fit(const DatasetSplit& dataset)
 }
 
 MatrixXd MLPClassifier::predict(const MatrixXd& x, bool argmaxed = false)
-{   
+{
     MatrixXd logits = this->feed(x);
     return  argmaxed ? this->argmax(logits) : logits;
 }
@@ -259,10 +274,6 @@ void MLPClassifier::load(const std::string& model_path)
         this->layers.emplace_back(input_shape, size, activation, true);
         auto &layer = this->layers.back();
 
-        /* FORCE correct shapes */
-        // layer.weights.resize(input_shape, size);
-        // layer.biases.resize(1, size);
-
         for (unsigned int i = 0; i < input_shape; ++i)
         {
             for (unsigned int j = 0; j < size; ++j)
@@ -275,7 +286,6 @@ void MLPClassifier::load(const std::string& model_path)
         {
             file.read(reinterpret_cast<char*>(&layer.biases(0, i)), sizeof(double));
         }
-
     }
     std::cout << "'" << model_path << "' loaded\n";
 }

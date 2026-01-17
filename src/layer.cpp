@@ -1,6 +1,5 @@
 #include "layer.hpp"
 
-#include "activations.hpp"
 
 std::unordered_map<std::string, std::function<MatrixXd(const MatrixXd&, bool)>>
     Layer::activationMap = {{"relu", relu}, {"sigmoid", sigmoid}, {"softmax", softmax}};
@@ -40,7 +39,6 @@ Layer::Layer(unsigned int input_shape,
     this->weights_gradients = MatrixXd::Zero(input_shape, size);
     this->biases_gradients  = RowVectorXd::Zero(size);
 }
-
 
 MatrixXd Layer::forward(const MatrixXd& input)
 {

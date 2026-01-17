@@ -2,6 +2,25 @@
 
 GradientDescent::GradientDescent(double learning_rate) : learning_rate(learning_rate) {}
 
+
+// Adam::Adam(double lr, const std::vector<Layer>& layers):learning_rate(lr), t(0),
+// weights_momentums_vec(layers.size()),
+// weights_rms_props_vec(layers.size()),
+// biases_momentums_vec(layers.size()),
+//     biases_rms_props_vec(layers.size())
+// {
+//     for (size_t i = 0; i < layers.size(); ++i)
+//     {
+//         size_t size = layers[i].size;
+//         size_t input_shape = layers[i].input_shape;
+
+//         weights_momentums_vec[i] = MatrixXd::Zero(input_shape, size);
+//         weights_rms_props_vec[i] = MatrixXd::Zero(input_shape, size);
+//         biases_momentums_vec[i]  = RowVectorXd::Zero(size);
+//         biases_rms_props_vec[i]  = RowVectorXd::Zero(size);
+//     }
+// }
+
 void GradientDescent::update(std::vector<Layer>& layers)
 {
     for (auto& layer : layers)
@@ -11,20 +30,10 @@ void GradientDescent::update(std::vector<Layer>& layers)
     }
 }
 
-Adam::Adam(double lr, const std::vector<Layer>& layers):learning_rate(lr), t(0),
-    weights_momentums_vec(layers.size()),
-    weights_rms_props_vec(layers.size()),
-    biases_momentums_vec(layers.size()),
-    biases_rms_props_vec(layers.size())
-{
-    for (size_t i = 0; i < layers.size(); ++i)
-    {
-        size_t size = layers[i].size;
-        size_t input_shape = layers[i].input_shape;
+// void Adam::update(std::vector<Layer>& layers)
+// {
+//     for (auto& layer : layers)
+//     {
 
-        weights_momentums_vec[i] = MatrixXd::Zero(input_shape, size);
-        weights_rms_props_vec[i] = MatrixXd::Zero(input_shape, size);
-        biases_momentums_vec[i]  = RowVectorXd::Zero(size);
-        biases_rms_props_vec[i]  = RowVectorXd::Zero(size);
-    }
-}
+//     }
+// }

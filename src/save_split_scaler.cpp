@@ -38,6 +38,7 @@ void    save_split(const rapidcsv::Document& shuffled_doc, size_t val_size)
     }
     trainDoc.Save("data/data_train.csv");
     valDoc.Save("data/data_val.csv");
+    std::cout << "data_train.csv and data_val.csv saved in data.\n";
 }
 
 void    save_scale(rapidcsv::Document& doc)

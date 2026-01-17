@@ -3,6 +3,7 @@
 
 #include <Eigen/Dense>
 #include <functional>
+#include "activations.hpp"
 
 using namespace Eigen;
 

@@ -1,8 +1,10 @@
 [
     {
       "batch_size": 128,
-      "epochs": 10,
+      "epochs": 20,
       "learning_rate": 0.01,
+      "early_stopping":true,
+      "optimizer":"adam",
       "metrics": ["accuracy", "precision"],
       "layers": [
         {

@@ -2,6 +2,7 @@
 #define EARLYSTOPPING_HPP
 
 #include <limits>
+#include <iostream>
 
 class EarlyStopping
 {

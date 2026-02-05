@@ -94,7 +94,6 @@ void MLPClassifier::build(unsigned int shape)
     this->epochs                 = checked_range(conf.value("epochs", 10), 1, 100, "epochs");
     this->batch_size             = checked_range(conf.value("batch_size", 32), 1, 256, "batch_size"); 
     this->earlystopping._enabled = conf.value("early_stopping", false);
-    this->optimizer              = conf.value("adam_optimizer", false)? new GradientDescent(learning_rate):new GradientDescent(learning_rate);
 
     std::vector<std::string> metrics = conf.value("metrics", std::vector<std::string>({}));
     checked_range(metrics.size(), (size_t)0, (size_t)4, "metrics_size");
@@ -119,6 +118,10 @@ void MLPClassifier::build(unsigned int shape)
         unsigned int shape = layers_json[i - 1]["size"];
         this->layers.emplace_back(shape, layers_json[i]["size"], layers_json[i]["activation"], false);
     }
+    std::string optimizer_str = conf.value("optimizer", "gd");
+    if (optimizer_str == "gd") this->optimizer = new GradientDescent(learning_rate);
+    if (optimizer_str == "adam") this->optimizer = new Adam(learning_rate, this->layers);
+    else this->optimizer = new GradientDescent(learning_rate);
     this->built = true;
 }
 

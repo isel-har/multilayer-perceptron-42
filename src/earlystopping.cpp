@@ -21,6 +21,9 @@ bool EarlyStopping::operator()(double loss)
     else
         ++this->times;
     if (this->times >= this->_patience)
+    {
+        std::cout << "training loop stopped by early-stopping\n";
         return true;
+    }
     return false;
 }

@@ -90,8 +90,8 @@ void MLPClassifier::build(unsigned int shape)
     const json conf = *this->confptr;
     this->input_shape            = shape;// to fix!
 
-    double      learning_rate    = checked_range(conf.value("learning_rate", 0.01), 0.01, 0.1, "learning_rate");
-    this->epochs                 = checked_range(conf.value("epochs", 10), 1, 100, "epochs");
+    double      learning_rate    = checked_range(conf.value("learning_rate", 0.01), 0.001, 0.1, "learning_rate");
+    this->epochs                 = checked_range(conf.value("epochs", 10), 1, 200, "epochs");
     this->batch_size             = checked_range(conf.value("batch_size", 32), 1, 256, "batch_size"); 
     this->earlystopping._enabled = conf.value("early_stopping", false);
 

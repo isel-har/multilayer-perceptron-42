@@ -4,14 +4,27 @@ void    print_usage(const char* prog)
 {
     std::cerr
         << "Usage:\n"
-        << "  " << prog << " split\n"
+        << "  " << prog << " split <*/file.csv> \n"
         << "  " << prog << " train <config.json>\n"
         << "  " << prog << " predict <model_x.bin>\n";
 }
 
-int cmd_split()
+int cmd_split(const char *datapath, const char *val_str)
 {
-    save_split_scaler("data/", 20);
+    if (datapath == NULL || val_str == NULL)
+    { 
+        std::cerr << "data file path and val size required.\n";
+        return EXIT_FAILURE;
+    }
+
+    size_t val_size = std::stoul(val_str);
+
+    if (!(val_size >= 5 && val_size <= 20)) {
+        std::cerr << "validation size between 5 and 20\n";
+        return EXIT_FAILURE;
+    }
+
+    save_split_scaler(datapath, val_size);
     return EXIT_SUCCESS;
 }
 
@@ -20,9 +33,10 @@ int cmd_train(const char* config_path)
     json         models_json = load_json(config_path);
     DatasetSplit datasplit   = train_val_split();
 
-
     std::vector<MLPClassifier> models;
     std::vector<History> histories;
+
+    std::srand(42);// to change!
 
     if (!models_json.size())
         models.emplace_back(models_json);
@@ -65,16 +79,22 @@ int cmd_train(const char* config_path)
     return EXIT_SUCCESS;
 }
 
-int cmd_predict(const char *model_path)
+int cmd_predict(const char *model_path, const char* datapath)
 {
+    if (datapath == NULL)
+    {
+        std::cerr << "data file path cannot be null.\n";
+        return EXIT_FAILURE;
+    }
+
     auto model  = MLPClassifier();
     auto scaler = Scaler("scaler_params.bin");
-    rapidcsv::Document doc("data/data.csv", rapidcsv::LabelParams(-1, -1));
+    rapidcsv::Document doc(datapath, rapidcsv::LabelParams(-1, -1));
 
     MatrixXd  Y_true = doc_to_eigen_encoded(doc);
     doc.RemoveColumn(1);
     MatrixXd  X      = doc_to_eigen(doc);
-    scaler.fit_transform(X);
+    scaler.transform(X);
     
     model.load(std::string(model_path));
     auto Y_pred = model.predict(X, false);

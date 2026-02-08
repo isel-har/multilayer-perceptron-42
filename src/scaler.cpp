@@ -19,7 +19,7 @@ Scaler::Scaler(const std::string& params_path)
     loaded = true;
 }
 
-void    Scaler::fit_transform(MatrixXd& X)
+void    Scaler::transform(MatrixXd& X)
 {
     if (!loaded)
         throw std::runtime_error("scaler params not loaded.");

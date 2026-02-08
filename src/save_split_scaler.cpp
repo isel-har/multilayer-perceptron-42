@@ -67,7 +67,7 @@ void    save_scale(rapidcsv::Document& doc)
 
 void save_split_scaler(const std::string& path, size_t val_size)
 {
-    rapidcsv::Document doc(path + "data.csv", rapidcsv::LabelParams(-1, -1));
+    rapidcsv::Document doc(path, rapidcsv::LabelParams(-1, -1));
 
     rapidcsv::Document shuffled_doc = shuffle_rows(doc);
     save_split(shuffled_doc, val_size);

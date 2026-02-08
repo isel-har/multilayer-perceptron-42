@@ -1,28 +1,14 @@
 [
     {
-      "batch_size": 128,
-      "epochs": 20,
-      "learning_rate": 0.01,
-      "early_stopping":true,
-      "optimizer":"adam",
+      "batch_size": 16,
+      "epochs": 45,
+      "learning_rate": 0.001,
+      "optimizer": "adam",
       "metrics": ["accuracy", "precision"],
       "layers": [
-        {
-          "size": 32,
-          "activation": "relu"
-        },
-        {
-          "size": 16,
-          "activation": "relu"
-        },
-        {
-          "size": 8,
-          "activation": "relu"
-        },
-        {
-          "size": 2,
-          "activation": "softmax"
-        }
-      ]
+        { "size": 72, "activation": "relu" }, 
+        { "size": 2, "activation": "softmax" }
+      ],
+      "early_stopping_patience": 10
     }
 ]

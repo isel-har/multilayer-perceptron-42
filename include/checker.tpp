@@ -18,7 +18,7 @@ template <typename T>
 void    checked_layers(const T& layers) {
 
     for (size_t i = 0; i < layers.size() - 1; ++i) {
-        checked_range((unsigned int)layers[i]["size"], (unsigned int)1, (unsigned int)128, "hidden_size");
+        checked_range((unsigned int)layers[i]["size"], (unsigned int)1, (unsigned int)256, "hidden_size");
     }
     if ((unsigned int)layers[layers.size() - 1]["size"] != (unsigned int)2)
         throw std::runtime_error("output layer must have 2 neurons.");

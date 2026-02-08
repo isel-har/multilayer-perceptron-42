@@ -15,7 +15,7 @@ class Scaler
         
         Scaler(const std::string &);
         Scaler();
-        void   fit_transform(MatrixXd&);
+        void   transform(MatrixXd&);
 };
 
 #endif

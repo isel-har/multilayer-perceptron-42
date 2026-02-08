@@ -48,8 +48,8 @@ DatasetSplit    train_val_split()
     datasplit.X_train = doc_to_eigen(trainDoc);
     datasplit.X_val   = doc_to_eigen(valDoc);
 
-    scaler.fit_transform(datasplit.X_train); // scale here!!!!
-    scaler.fit_transform(datasplit.X_val);
+    scaler.transform(datasplit.X_train); // scale here!!!!
+    scaler.transform(datasplit.X_val);
 
     return datasplit;
 }

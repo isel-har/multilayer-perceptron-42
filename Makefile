@@ -1,8 +1,9 @@
 CXX := g++
 NAME := mlp
+PYTHON :=python3.12
 
 NUMPY_PATH := /usr/lib/python3/dist-packages/numpy/core/include/
-PYTHON_PATH := /usr/include/python3.10
+PYTHON_PATH := /usr/include/$(PYTHON)
 
 CXXFLAGS := -O3 -march=corei7 -mavx2 -std=c++17 \
             -Wall -Wextra \
@@ -11,7 +12,7 @@ CXXFLAGS := -O3 -march=corei7 -mavx2 -std=c++17 \
 INCLUDES := -I lib -I lib/eigen -I include \
             -I $(NUMPY_PATH) -I $(PYTHON_PATH)
 
-LIBS := -lpython3.10
+LIBS := -l$(PYTHON)
 
 SRCS := main.cpp \
 	src/activations.cpp  src/csv_to_eigen.cpp  src/history.cpp  src/layer.cpp  src/mlpclassifier.cpp  src/scaler.cpp src/visualizer.cpp \

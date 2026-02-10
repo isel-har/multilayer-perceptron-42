@@ -88,8 +88,8 @@ void MLPClassifier::build(unsigned int shape)
         throw std::runtime_error("config object required to build.");
 
     const json conf = *this->confptr;
-    this->input_shape            = shape;// to fix!
 
+    this->input_shape            = shape;
     double      learning_rate    = checked_range(conf.value("learning_rate", 0.01), 0.001, 0.1, "learning_rate");
     this->epochs                 = checked_range(conf.value("epochs", 10), 1, 200, "epochs");
     this->batch_size             = checked_range(conf.value("batch_size", 32), 1, 256, "batch_size"); 
@@ -107,20 +107,21 @@ void MLPClassifier::build(unsigned int shape)
             this->metrics.push_back(std::make_pair(metric, MLPClassifier::metricsMap[metric]));
         }
     }
-    std::vector<json> layers_json = conf.value("layers", this->default_layers()); // default two hidden layers + output layer
-    checked_range(layers_json.size(), (size_t)2, (size_t)11, "layers_stack_size");
+    std::vector<json> layers_json = conf.value("hidden_layers", this->default_layers()); // default two hidden layers + output layer
+    checked_range(layers_json.size(), (size_t)1, (size_t)11, "layers_stack_size");
     checked_layers(layers_json);
     
-    this->layers.emplace_back(shape, layers_json[0]["size"],
-                              layers_json[0]["activation"], false);
+    this->layers.emplace_back(layers_json[0], shape);
     for (size_t i = 1; i < layers_json.size(); ++i)
     {
-        unsigned int shape = layers_json[i - 1]["size"];
-        this->layers.emplace_back(layers_json[i], shape);
-        // this->layers.emplace_back(shape, layers_json[i]["size"], layers_json[i].value("activation", "relu"), false);
+        unsigned int shape_ = layers_json[i - 1]["size"];
+        this->layers.emplace_back(layers_json[i], shape_);
     }
+
+    this->layers.emplace_back(layers_json.back()["size"], 2, "softmax", false);
+
     std::string optimizer_str = conf.value("optimizer", "gd");
-    if (optimizer_str == "gd") this->optimizer = new GradientDescent(learning_rate);
+    if (optimizer_str == "gd") this->optimizer   = new GradientDescent(learning_rate);
     if (optimizer_str == "adam") this->optimizer = new Adam(learning_rate, this->layers);
     else this->optimizer = new GradientDescent(learning_rate);
     this->built = true;
@@ -184,6 +185,7 @@ History MLPClassifier::fit(const DatasetSplit& dataset)
     unsigned int e = 1;
     double      loss_e = 0.0;
 
+    std::cout << "model fit\n";
     while (e <= epochs && !earlystopping(loss_e))
     {
         for (unsigned int i = 0; i < (unsigned int) dataset.X_train.rows(); i += batch_size)

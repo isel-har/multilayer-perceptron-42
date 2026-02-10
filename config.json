@@ -5,9 +5,8 @@
       "learning_rate": 0.001,
       "optimizer": "adam",
       "metrics": ["accuracy", "precision"],
-      "layers": [
-        { "size": 72, "initializer": "he", "activation": "relu"}, 
-        { "size": 2,"activation": "softmax" }
+      "hidden_layers": [
+        { "size": 68, "initializer": "he", "activation": "relu"}
       ],
       "early_stopping_patience": 10
     }

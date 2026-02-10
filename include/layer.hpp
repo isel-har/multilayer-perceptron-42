@@ -3,6 +3,7 @@
 
 #include <Eigen/Dense>
 #include <functional>
+#include <cassert>
 
 #include "activations.hpp"
 #include "initializers.hpp"

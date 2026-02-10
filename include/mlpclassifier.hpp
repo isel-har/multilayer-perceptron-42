@@ -1,5 +1,5 @@
-#ifndef SEQUENTIAL_HPP
-#define SEQUENTIAL_HPP
+#ifndef MLPCLASSIFIER_HPP
+#define MLPCLASSIFIER_HPP
 
 #include "csv_to_eigen.hpp"
 #include "earlystopping.hpp"
@@ -9,6 +9,7 @@
 #include "metrics.hpp"
 #include "optimizers.hpp"
 #include "checker.tpp"
+
 
 #include <algorithm>
 #include <exception>

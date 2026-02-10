@@ -4,6 +4,8 @@
 std::unordered_map<std::string, std::function<MatrixXd(const MatrixXd&, bool)>>
     Layer::activationMap = {{"relu", relu}, {"sigmoid", sigmoid}, {"softmax", softmax}};
 
+std::unordered_map<std::string, std::function<MatrixXd(unsigned int rows, unsigned int cols)>>
+    Layer::initializersMap = {{"he", He::init}, {"xavier", Xavier::init}, {"random", Random::init}};
 
 Layer::Layer():size(0), input_shape(0)
 {
@@ -16,6 +18,28 @@ Layer::Layer():size(0), input_shape(0)
     this->biases_gradients  = RowVectorXd::Zero(size);
 }
 
+Layer::Layer(const json &hidden_layer_json,  unsigned int input_shape)
+{
+    std::string initializer_ = hidden_layer_json.value("initializer", "he");
+    std::string activation_  = hidden_layer_json.value("activation", "relu");
+    unsigned int size        = hidden_layer_json["size"];
+
+    this->activation = this->activationMap[activation_];
+    std::function<MatrixXd(unsigned int rows, unsigned int cols)> initializer = this->initializersMap[initializer_];
+    
+    if (!initializer)
+        throw std::runtime_error("initializer not found, (xavier, he, random)\n");
+
+    if (!this->activation)
+        throw std::runtime_error("activation function not found, (sigmoid, relu)\n");
+    
+    this->weights = initializer(input_shape, size);
+    
+    this->biases = RowVectorXd::Zero(size);
+    this->weights_gradients = MatrixXd::Zero(input_shape, size);
+    this->biases_gradients  = RowVectorXd::Zero(size);
+}
+
 Layer::Layer(unsigned int input_shape,
              unsigned int size,
              const std::string& activation_,
@@ -23,6 +47,8 @@ Layer::Layer(unsigned int input_shape,
     : size(size), input_shape(input_shape)
 {
     this->activation = this->activationMap[activation_];
+    if (!this->activation)
+        std::cout << "activation not found\n";
     this->activation__ = activation_;
 
     if (zeros)

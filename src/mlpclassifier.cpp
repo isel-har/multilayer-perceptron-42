@@ -116,7 +116,8 @@ void MLPClassifier::build(unsigned int shape)
     for (size_t i = 1; i < layers_json.size(); ++i)
     {
         unsigned int shape = layers_json[i - 1]["size"];
-        this->layers.emplace_back(shape, layers_json[i]["size"], layers_json[i]["activation"], false);
+        this->layers.emplace_back(layers_json[i], shape);
+        // this->layers.emplace_back(shape, layers_json[i]["size"], layers_json[i].value("activation", "relu"), false);
     }
     std::string optimizer_str = conf.value("optimizer", "gd");
     if (optimizer_str == "gd") this->optimizer = new GradientDescent(learning_rate);

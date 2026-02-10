@@ -3,15 +3,22 @@
 
 #include <Eigen/Dense>
 #include <functional>
+
 #include "activations.hpp"
+#include "initializers.hpp"
+#include "json.hpp"
+
 
 using namespace Eigen;
+using json = nlohmann::json;
 
 class Layer
 {
   private:
     static std::unordered_map<std::string, std::function<MatrixXd(const MatrixXd&, bool)>>
         activationMap;
+    static std::unordered_map<std::string, std::function<MatrixXd(unsigned int rows, unsigned int cols)>>
+        initializersMap;
 
   public:
     unsigned int                                   size;
@@ -26,6 +33,7 @@ class Layer
     MatrixXd    weights_gradients;
     RowVectorXd biases_gradients;
 
+    // Initializer *initializer_ptr;
     /*
         layer caches
     */
@@ -33,7 +41,10 @@ class Layer
     MatrixXd input_cache; // to change!
     MatrixXd z_cache;
 
+
+    // Layer(Initializer &initializer, const std::string& activation);
     Layer(unsigned int, unsigned int, const std::string&, bool);
+    Layer(const json &hidden_layer, unsigned int shape);
     Layer();
     ~Layer();
 
@@ -42,5 +53,9 @@ class Layer
 };
 static std::unordered_map<std::string, std::function<MatrixXd(const MatrixXd&, bool)>>
     activationMap;
+
+static std::unordered_map<std::string, std::function<MatrixXd(unsigned int rows, unsigned int cols)>>
+        initializersMap;
+
 
 #endif

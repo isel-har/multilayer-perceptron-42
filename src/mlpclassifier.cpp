@@ -185,7 +185,6 @@ History MLPClassifier::fit(const DatasetSplit& dataset)
     unsigned int e = 1;
     double      loss_e = 0.0;
 
-    std::cout << "model fit\n";
     while (e <= epochs && !earlystopping(loss_e))
     {
         for (unsigned int i = 0; i < (unsigned int) dataset.X_train.rows(); i += batch_size)
@@ -251,6 +250,12 @@ void MLPClassifier::save(const std::string &name) const
     std::cout << '\'' << name + "\' saved\n";
 }
 
+void MLPClassifier::safe_read(std::ifstream& file, char* buffer, std::size_t size){
+    if (!file.read(buffer, size))
+        throw std::runtime_error("Corrupted or truncated model file.");
+}
+
+
 void MLPClassifier::load(const std::string& model_path)
 {
     std::ifstream file(model_path, std::ios::binary);
@@ -258,20 +263,23 @@ void MLPClassifier::load(const std::string& model_path)
         throw std::runtime_error("Failed to load the model: " + model_path);
 
     size_t total_layers;
-    file.read(reinterpret_cast<char*>(&total_layers), sizeof(total_layers));
+    MLPClassifier::safe_read(file, reinterpret_cast<char*>(&total_layers), sizeof(total_layers));
 
     this->layers.reserve(total_layers);
 
     for (size_t i = 0; i < total_layers; ++i)
     {
-        unsigned int size = 0;
+        unsigned int size        = 0;
         unsigned int input_shape = 0;
+        size_t activation_length = 0;
 
-        file.read(reinterpret_cast<char*>(&size), sizeof(size));
-        file.read(reinterpret_cast<char*>(&input_shape), sizeof(input_shape));
+        MLPClassifier::safe_read(file, reinterpret_cast<char*>(&size), sizeof(size));
+        MLPClassifier::safe_read(file, reinterpret_cast<char*>(&input_shape), sizeof(input_shape));
+        MLPClassifier::safe_read(file, reinterpret_cast<char*>(&activation_length), sizeof(activation_length));
 
-        size_t activation_length;
-        file.read(reinterpret_cast<char*>(&activation_length), sizeof(activation_length));
+        if (size == 0 || input_shape == 0 || activation_length > 50)
+            throw std::runtime_error("Invalid layer metadata.");
+
 
         std::string activation;
         activation.resize(activation_length);

@@ -18,8 +18,8 @@ int run(int argc, char** argv)
     {
         if (op == "train")
             return cmd_train(argv[2]);
-        else if (argc == 4)
-            return cmd_predict(argv[2], argv[3]);
+        else
+            return cmd_predict(argv[2]);
 
         print_usage(argv[0]);
         return EXIT_FAILURE;

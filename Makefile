@@ -1,6 +1,6 @@
 CXX := g++
 NAME := mlp
-PYTHON :=python3.12
+PYTHON :=python3.10
 
 NUMPY_PATH := /usr/lib/python3/dist-packages/numpy/core/include/
 PYTHON_PATH := /usr/include/$(PYTHON)

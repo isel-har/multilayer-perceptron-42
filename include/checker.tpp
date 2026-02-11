@@ -3,6 +3,7 @@
 
 #include <stdexcept>
 #include <string>
+#include <fstream>
 
 template <typename T>
 T   checked_range(const T& value, const T& min, const T& max, const std::string& name)

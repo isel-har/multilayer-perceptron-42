@@ -57,6 +57,9 @@ class MLPClassifier
     MatrixXd predict(const MatrixXd& x, bool argmaxed);
 
     void train_val_metrics(unsigned int epoch, const DatasetSplit& dataset, History& history);
+
+    static void safe_read(std::ifstream& file, char* buffer, std::size_t size);
+
 };
 
 static std::unordered_map<std::string, Metric*> metricsMap;

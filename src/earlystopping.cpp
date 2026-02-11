@@ -13,6 +13,7 @@ bool EarlyStopping::operator()(double loss)
 {
     if (!_enabled)
         return false;
+
     if (loss < optimal_loss)
     {
         this->optimal_loss = loss;

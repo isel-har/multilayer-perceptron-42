@@ -93,7 +93,12 @@ void MLPClassifier::build(unsigned int shape)
     double      learning_rate    = checked_range(conf.value("learning_rate", 0.01), 0.001, 0.1, "learning_rate");
     this->epochs                 = checked_range(conf.value("epochs", 10), 1, 200, "epochs");
     this->batch_size             = checked_range(conf.value("batch_size", 32), 1, 256, "batch_size"); 
-    this->earlystopping._enabled = conf.value("early_stopping", false);
+
+    this->earlystopping._enabled  = conf.contains("early_stopping_patience");
+    if (this->earlystopping._enabled) {
+        this->earlystopping._patience = checked_range(conf.value("early_stopping_patience", 5), 1, 30, "early_stopping_patience");
+        std::cout << "early stopping enabled with patience :" << this->earlystopping._patience << "\n";
+    }
 
     std::vector<std::string> metrics = conf.value("metrics", std::vector<std::string>({}));
     checked_range(metrics.size(), (size_t)0, (size_t)4, "metrics_size");

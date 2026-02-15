@@ -37,6 +37,8 @@ class Adam : public Optimizer
   
   public:
       Adam(double, const std::vector<Layer>&);
+      ~Adam();
+
       void update(std::vector<Layer>&) override;
 };
 

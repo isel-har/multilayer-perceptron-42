@@ -42,7 +42,6 @@ class Layer
     MatrixXd input_cache; // to change!
     MatrixXd z_cache;
 
-
     // Layer(Initializer &initializer, const std::string& activation);
     Layer(unsigned int, unsigned int, const std::string&, bool);
     Layer(const json &hidden_layer, unsigned int shape);
@@ -56,7 +55,7 @@ static std::unordered_map<std::string, std::function<MatrixXd(const MatrixXd&, b
     activationMap;
 
 static std::unordered_map<std::string, std::function<MatrixXd(unsigned int rows, unsigned int cols)>>
-        initializersMap;
+    initializersMap;
 
 
 #endif

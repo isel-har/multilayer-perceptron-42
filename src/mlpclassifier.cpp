@@ -16,6 +16,7 @@ MLPClassifier::MLPClassifier(const json& conf) : built(false), earlystopping(fal
 
 MLPClassifier::~MLPClassifier()
 {
+    delete this->optimizer;
     for (size_t i = 0; i < this->metrics.size(); ++i)
     {
         this->metrics[i].second = nullptr;
@@ -307,4 +308,11 @@ void MLPClassifier::load(const std::string& model_path)
         }
     }
     std::cout << "'" << model_path << "' loaded\n";
+}
+
+
+void    MLPClassifier::clean_static_var() {
+    for (auto& [name, vec] : metricsMap) {
+        delete vec;
+    }
 }

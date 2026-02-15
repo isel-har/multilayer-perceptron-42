@@ -82,9 +82,13 @@ int cmd_train(const char* config_path)
             figures.push_back(plots);
             ylabels.push_back(metric);
         }
-    
-        Visualizer::multi_figures(figures, ylabels);
-        Visualizer::show();
+
+        // Visualizer::multi_figures(figures, ylabels);
+        // plt::clear();
+        // Visualizer::show();
+
+        /*cleaning*/
+        MLPClassifier::clean_static_var();
         return EXIT_SUCCESS;
     }
     catch (const std::exception &e) {

@@ -57,6 +57,7 @@ class MLPClassifier
 
     void train_val_metrics(unsigned int epoch, const DatasetSplit& dataset, History& history);
     static void safe_read(std::ifstream& file, char* buffer, std::size_t size);
+    static void clean_static_var();
 };
 
 static std::unordered_map<std::string, Metric*> metricsMap;

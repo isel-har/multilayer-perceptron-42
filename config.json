@@ -10,17 +10,5 @@
         { "size": 24, "initializer": "he", "activation": "relu"},
         { "size": 8, "initializer": "he", "activation": "relu"}
       ]
-    },
-    {
-      "batch_size": 16,
-      "epochs": 100,
-      "learning_rate": 0.01,
-      "optimizer": "gd",
-      "metrics": ["accuracy", "precision"],
-      "hidden_layers": [
-        { "size": 68, "initializer": "xavier", "activation": "sigmoid"},
-        { "size": 24, "initializer": "he", "activation": "relu"},
-        { "size": 8, "initializer": "he", "activation": "relu"}
-      ]
-    }
+    } 
 ]

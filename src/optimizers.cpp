@@ -2,14 +2,12 @@
 
 GradientDescent::GradientDescent(double learning_rate) : learning_rate(learning_rate) {}
 
-
 Adam::Adam(double lr, const std::vector<Layer>& layers):learning_rate(lr), t(0),
 weights_momentums_vec(layers.size()),
 weights_rms_props_vec(layers.size()),
 biases_momentums_vec(layers.size()),
-    biases_rms_props_vec(layers.size())
+biases_rms_props_vec(layers.size())
 {
-
     std::cout << "adam optimizer used\n";
     for (size_t i = 0; i < layers.size(); ++i)
     {
@@ -72,4 +70,8 @@ void Adam::update(std::vector<Layer>& layers)
         layers[i].biases = layers[i].biases - (learning_rate * (m_b_hat.array() / denom_b.array()).matrix());
 
     }
+}
+
+Adam::~Adam() {
+
 }

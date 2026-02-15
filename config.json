@@ -1,25 +1,26 @@
 [
     {
       "batch_size": 16,
-      "epochs": 200,
-      "learning_rate": 0.001,
-      "early_stopping_patience":20,
-      "optimizer": "adam",
-      "metrics": ["accuracy", "precision"],
-      "hidden_layers": [
-        { "size": 68, "initializer": "xavier", "activation": "sigmoid"}
-      ]
-    },
-    {
-      "batch_size": 32,
-      "epochs": 40,
+      "epochs": 80,
       "learning_rate": 0.001,
       "optimizer": "adam",
       "metrics": ["accuracy", "precision"],
       "hidden_layers": [
         { "size": 68, "initializer": "xavier", "activation": "sigmoid"},
-        { "size": 32, "initializer": "he", "activation": "relu"},
-        { "size": 16, "initializer": "he", "activation": "relu"}
+        { "size": 24, "initializer": "he", "activation": "relu"},
+        { "size": 8, "initializer": "he", "activation": "relu"}
+      ]
+    },
+    {
+      "batch_size": 16,
+      "epochs": 100,
+      "learning_rate": 0.01,
+      "optimizer": "gd",
+      "metrics": ["accuracy", "precision"],
+      "hidden_layers": [
+        { "size": 68, "initializer": "xavier", "activation": "sigmoid"},
+        { "size": 24, "initializer": "he", "activation": "relu"},
+        { "size": 8, "initializer": "he", "activation": "relu"}
       ]
     }
 ]

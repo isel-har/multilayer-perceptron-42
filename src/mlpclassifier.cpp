@@ -6,10 +6,10 @@ std::unordered_map<std::string, Metric*> MLPClassifier::metricsMap = {
     {"loss", new BinarycrossEntropy()}
 };
 
-MLPClassifier::MLPClassifier():built(false), loaded(false), confptr(nullptr), earlystopping(false)
+MLPClassifier::MLPClassifier() : built(false), confptr(nullptr), earlystopping(false)
 {}
 
-MLPClassifier::MLPClassifier(const json& conf) : built(false), loaded(false),earlystopping(false)
+MLPClassifier::MLPClassifier(const json& conf) : built(false), earlystopping(false)
 {
     this->confptr = &conf;
 }

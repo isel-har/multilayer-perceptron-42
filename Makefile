@@ -1,58 +1,73 @@
-CXX := g++
-NAME := mlp
-PYTHON :=python3.10
+CXX    := c++
+NAME   := mlp
+PYTHON := python3.10
 
-NUMPY_PATH := /usr/lib/python3/dist-packages/numpy/core/include/
+NUMPY_PATH  := /usr/lib/python3/dist-packages/numpy/core/include/
 PYTHON_PATH := /usr/include/$(PYTHON)
 
 CXXFLAGS := -O3 -march=corei7 -mavx2 -std=c++17 \
             -Wall -Wextra \
             -Wno-deprecated-copy -Wno-deprecated-declarations
 
-INCLUDES := -I lib -I lib/eigen -I include \
-            -I $(NUMPY_PATH) -I $(PYTHON_PATH)
+
+INCLUDES := -I include \
+			-isystem lib \
+            -isystem lib/eigen \
+            -I $(NUMPY_PATH) \
+			-I $(PYTHON_PATH)
 
 LIBS := -l$(PYTHON)
 
-SRCS := main.cpp \
-	src/activations.cpp  src/csv_to_eigen.cpp  src/history.cpp  src/layer.cpp  src/mlpclassifier.cpp  src/scaler.cpp src/visualizer.cpp \
-	src/save_split_scaler.cpp    src/earlystopping.cpp  src/json_loader.cpp  src/metrics.cpp  src/optimizers.cpp \
-	src/commands.cpp  src/app.cpp src/initializers.cpp
 
-OBJS = $(SRCS:.cpp=.o)
+SRCS    := $(shell echo src/*.cpp main.cpp)
+HEADERS := $(shell echo include/*.hpp include/*.tpp)
 
-CSVLIB := https://raw.githubusercontent.com/d99kris/rapidcsv/refs/heads/master/src/rapidcsv.h
-EIGENLIB := https://gitlab.com/libeigen/eigen.git
-PLOTLIB := https://raw.githubusercontent.com/lava/matplotlib-cpp/refs/heads/master/matplotlibcpp.h
-JSONLIB := https://raw.githubusercontent.com/nlohmann/json/refs/heads/develop/single_include/nlohmann/json.hpp
 
+OBJS := $(SRCS:.cpp=.o)
 
 LIBDIR := lib
 
-all: $(NAME)
+LIB_STAMP := $(LIBDIR)/.libs_done
 
-libs:
+all: $(LIB_STAMP) $(NAME)
+
+
+$(LIB_STAMP):
 	@echo "Downloading libraries..."
-	mkdir -p $(LIBDIR)
+	@mkdir -p $(LIBDIR)
 
-	wget -nc -P $(LIBDIR) $(CSVLIB) $(PLOTLIB) $(JSONLIB)
+	@wget -nc -P $(LIBDIR) \
+	https://raw.githubusercontent.com/d99kris/rapidcsv/refs/heads/master/src/rapidcsv.h \
+	https://raw.githubusercontent.com/lava/matplotlib-cpp/refs/heads/master/matplotlibcpp.h \
+	https://raw.githubusercontent.com/nlohmann/json/refs/heads/develop/single_include/nlohmann/json.hpp
 
 	@if [ ! -d "$(LIBDIR)/eigen" ]; then \
-		echo "Folder not found, cloning..."; \
-		git clone $(EIGENLIB) $(LIBDIR)/eigen; \
+		echo "Cloning Eigen..."; \
+		git clone https://gitlab.com/libeigen/eigen.git $(LIBDIR)/eigen; \
 	else \
-		echo "Folder exists, skipping clone."; \
+		echo "Eigen already exists."; \
 	fi
+	@touch $(LIB_STAMP)
 
 
-$(NAME): libs 
-	$(CXX) $(CXXFLAGS) $(SRCS) $(INCLUDES) $(LIBS) -o $@
+
+$(NAME): $(OBJS)
+	@echo "Linking object files..."
+	@$(CXX) $(CXXFLAGS) $(OBJS) $(LIBS) -o $@
+	@echo "done"
 
 
-# %.o:srcs/%.c $(INC)
-# 	$(CXX) $(CXXFLAGS) -c $(SRCS) $(INCLUDES) $(LIBS) $< -o $@
+%.o: %.cpp $(HEADERS)
+	@echo "Compiling source files..."
+	@$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
-# # clean:
-# 	rm -f $(TARGET)
 
-.PHONY: all libs clean fclean
+clean:
+	rm -f $(OBJS)
+
+fclean: clean
+	rm -f $(NAME)
+
+re: fclean all
+
+.PHONY: all libs clean fclean re

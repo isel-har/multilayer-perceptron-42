@@ -5,3 +5,4 @@ model_*.bin
 *.bin
 mlp
 *.csv
+*.o

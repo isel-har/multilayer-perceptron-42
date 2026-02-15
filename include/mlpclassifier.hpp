@@ -28,7 +28,6 @@ class MLPClassifier
   unsigned int batch_size;
   unsigned int input_shape;
   bool         built;
-  bool         loaded;
 
 
   std::vector<Layer>                           layers;
@@ -57,9 +56,7 @@ class MLPClassifier
     MatrixXd predict(const MatrixXd& x, bool argmaxed);
 
     void train_val_metrics(unsigned int epoch, const DatasetSplit& dataset, History& history);
-
     static void safe_read(std::ifstream& file, char* buffer, std::size_t size);
-
 };
 
 static std::unordered_map<std::string, Metric*> metricsMap;

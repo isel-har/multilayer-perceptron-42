@@ -42,20 +42,22 @@ int cmd_train(const char* config_path)
         DatasetSplit datasplit   = train_val_split();
     
         std::vector<MLPClassifier> models;
-        std::vector<History> histories;
+        std::vector<History>       histories;
     
-        std::srand(42);// to change!
+        std::srand(42);
     
         if (!models_json.size())
             models.emplace_back(models_json);
         else
+        {
             for (const auto& jmodel : models_json)
                 models.emplace_back(jmodel);
+        }
     
         const unsigned int input_shape =
             static_cast<unsigned int>(datasplit.X_train.cols());
     
-        for (size_t i = 0; i < models.size(); ++i)
+        for (size_t i = 0; i < models.size(); i++)
         {
             std::cout << "model ______________[" << i + 1 << "]______________\n";
     
@@ -126,10 +128,11 @@ int cmd_predict(const char* datapath)
         MatrixXd  X      = doc_to_eigen(doc);
         scaler.transform(X);
 
+        auto bce = BinarycrossEntropy();
         for (size_t i = 0; i < models.size(); ++i) {
 
             auto Y_pred = models[i].predict(X, false);
-            double loss = BinarycrossEntropy().compute(Y_pred, Y_true);
+            double loss = bce.compute(Y_pred, Y_true);
             std::cout << "model "<< i + 1 <<" loss evaluation :" << loss << "\n";
         }
         return EXIT_SUCCESS;

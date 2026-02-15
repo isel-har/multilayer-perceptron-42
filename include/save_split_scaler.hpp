@@ -10,6 +10,7 @@
 #include "scaler.hpp"
 #include "csv_to_eigen.hpp"
 
+
 rapidcsv::Document shuffle_rows(const rapidcsv::Document& doc);
 
 void save_scale(rapidcsv::Document& doc);

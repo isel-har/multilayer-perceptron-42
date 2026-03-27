@@ -1,5 +1,4 @@
-#ifndef MLPCLASSIFIER_HPP
-#define MLPCLASSIFIER_HPP
+#pragma once
 
 #include "csv_to_eigen.hpp"
 #include "earlystopping.hpp"
@@ -18,6 +17,7 @@
 #include <utility>
 
 using json = nlohmann::json;
+
 
 class MLPClassifier
 {
@@ -50,6 +50,10 @@ class MLPClassifier
     void    build(unsigned int);
     History fit(const DatasetSplit&);
 
+
+    void                      set_weights(const std::vector<Layer> &);
+    const std::vector<Layer>  &get_weights() const;
+
     std::vector<json> default_layers();
 
     MatrixXd argmax(const MatrixXd&) const;
@@ -61,5 +65,3 @@ class MLPClassifier
 };
 
 static std::unordered_map<std::string, Metric*> metricsMap;
-
-#endif

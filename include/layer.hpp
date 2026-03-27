@@ -1,7 +1,6 @@
 #ifndef LAYER_HPP
 #define LAYER_HPP
 
-#include <Eigen/Dense>
 #include <functional>
 #include <cassert>
 
@@ -10,6 +9,7 @@
 #include "json.hpp"
 
 
+#include <Eigen/Dense>
 using namespace Eigen;
 using json = nlohmann::json;
 
@@ -51,11 +51,14 @@ class Layer
     MatrixXd forward(const MatrixXd&);
     MatrixXd backward(const MatrixXd&);
 };
+
+
 static std::unordered_map<std::string, std::function<MatrixXd(const MatrixXd&, bool)>>
     activationMap;
 
 static std::unordered_map<std::string, std::function<MatrixXd(unsigned int rows, unsigned int cols)>>
     initializersMap;
+
 
 
 #endif

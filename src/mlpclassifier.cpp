@@ -6,10 +6,10 @@ std::unordered_map<std::string, Metric*> MLPClassifier::metricsMap = {
     {"loss", new BinarycrossEntropy()}
 };
 
-MLPClassifier::MLPClassifier() : built(false), confptr(nullptr), earlystopping(false)
+MLPClassifier::MLPClassifier() : built(false), confptr(nullptr), earlystopping(20, false, false)
 {}
 
-MLPClassifier::MLPClassifier(const json& conf) : built(false), earlystopping(false)
+MLPClassifier::MLPClassifier(const json& conf) : built(false), earlystopping(20, false, false)
 {
     this->confptr = &conf;
 }
@@ -91,13 +91,14 @@ void MLPClassifier::build(unsigned int shape)
     const json conf = *this->confptr;
 
     this->input_shape            = shape;
-    double      learning_rate    = checked_range(conf.value("learning_rate", 0.01), 0.001, 0.1, "learning_rate");
-    this->epochs                 = checked_range(conf.value("epochs", 10), 1, 200, "epochs");
+    double      learning_rate    = checked_range(conf.value("learning_rate", 0.01), 0.0001, 0.1, "learning_rate");
+    this->epochs                 = checked_range(conf.value("epochs", 10), 1, 1000, "epochs");
     this->batch_size             = checked_range(conf.value("batch_size", 32), 1, 256, "batch_size"); 
 
     this->earlystopping._enabled  = conf.contains("early_stopping_patience");
     if (this->earlystopping._enabled) {
-        this->earlystopping._patience = checked_range(conf.value("early_stopping_patience", 5), 1, 30, "early_stopping_patience");
+        this->earlystopping._patience = checked_range(conf.value("early_stopping_patience", 5), 1, 100, "early_stopping_patience");
+        this->earlystopping.restore_best_weights = conf.value("restore_best_weights", false);
         std::cout << "early stopping enabled with patience :" << this->earlystopping._patience << "\n";
     }
 
@@ -155,7 +156,6 @@ void MLPClassifier::backward(const MatrixXd& dl_out)
         dloss = this->layers[last].backward(dloss);
     }
 }
-
 // MatrixXd MLPClassifier::argmax(const MatrixXd& y_probs) const
 // {
 //     MatrixXd result = MatrixXd::Zero(y_probs.rows(), y_probs.cols());
@@ -191,7 +191,7 @@ History MLPClassifier::fit(const DatasetSplit& dataset)
     unsigned int e = 1;
     double      loss_e = 0.0;
 
-    while (e <= epochs && !earlystopping(loss_e))
+    while (e <= epochs && !earlystopping(loss_e, this))
     {
         for (unsigned int i = 0; i < (unsigned int) dataset.X_train.rows(); i += batch_size)
         {
@@ -310,9 +310,22 @@ void MLPClassifier::load(const std::string& model_path)
     std::cout << "'" << model_path << "' loaded\n";
 }
 
-
 void    MLPClassifier::clean_static_var() {
     for (auto& [name, vec] : metricsMap) {
         delete vec;
     }
+}
+
+void    MLPClassifier::set_weights(const std::vector<Layer> &layers)
+{
+    for (size_t i = 0; i < this->layers.size(); ++i)
+    {
+            this->layers[i].weights = layers[i].weights;
+            this->layers[i].biases  = layers[i].biases;
+    }
+}
+
+const std::vector<Layer> &MLPClassifier::get_weights() const
+{
+    return this->layers;
 }

@@ -9,12 +9,13 @@
 #include <vector>
 #include "scaler.hpp"
 #include "csv_to_eigen.hpp"
-
+#include <ctime>
 
 rapidcsv::Document shuffle_rows(const rapidcsv::Document& doc);
 
-void save_scale(rapidcsv::Document& doc);
-void save_split(const rapidcsv::Document& doc, size_t val_size);
-void save_split_scaler(const std::string& path, size_t val_size);
+void    save_scale(rapidcsv::Document& doc);
+void    save_split_scaler(const std::string& path, size_t val_size);
+
+std::pair<rapidcsv::Document, rapidcsv::Document>    train_val_split(const rapidcsv::Document& doc, size_t val_size);
 
 #endif

@@ -75,7 +75,7 @@ def splitDataset(path, cut=0.2, label=False, shuffle=False):
     writeToCsv(filename + '_training.csv', trainingset, labels)
 
 
-dataset_url = 'https://cdn.intra.42.fr/document/document/39022/data.csv'
+dataset_url = 'https://cdn.intra.42.fr/document/document/464/data.csv'
 filepath = './data.csv'
 os.system('curl -s -o {1} {0}'.format(dataset_url, filepath))
 splitDataset(filepath, cut=0.25, label=False, shuffle=True)

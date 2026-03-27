@@ -2,6 +2,7 @@
 
 rapidcsv::Document shuffle_rows(const rapidcsv::Document& doc)
 {
+
     size_t rowCount = doc.GetRowCount();
     rapidcsv::Document shuffled_doc("", rapidcsv::LabelParams(-1, -1));
 
@@ -18,28 +19,56 @@ rapidcsv::Document shuffle_rows(const rapidcsv::Document& doc)
     return shuffled_doc;
 }
 
-void    save_split(const rapidcsv::Document& shuffled_doc, size_t val_size)
+std::pair<rapidcsv::Document, rapidcsv::Document> train_val_split(const rapidcsv::Document& shuffled_doc, size_t val_size)
 {
-    size_t rowCount = shuffled_doc.GetRowCount();
-    rapidcsv::Document trainDoc("", rapidcsv::LabelParams(-1, -1));
-    rapidcsv::Document valDoc("", rapidcsv::LabelParams(-1, -1));
+    std::vector<char> y = shuffled_doc.GetColumn<char>(1);
+    std::vector<size_t> class_1, class_2;
 
-    size_t val_rows   = (rowCount * val_size) / 100;
-    size_t train_rows = rowCount - val_rows;
-
-    size_t index = 0;
-
-    for (; index < train_rows; ++index)
-        trainDoc.SetRow(index, shuffled_doc.GetRow<std::string>(index));
-    for (size_t i = 0; i < val_rows; ++i)
+    for (size_t i = 0; i < y.size(); ++i)
     {
-        valDoc.SetRow(i, shuffled_doc.GetRow<std::string>(index));
-        ++index;
+        if (y[i] == 'M')
+            class_1.push_back(i);
+        else
+            class_2.push_back(i);
     }
-    trainDoc.Save("data/data_train.csv");
-    valDoc.Save("data/data_val.csv");
-    std::cout << "data_train.csv and data_val.csv saved in data.\n";
+
+    size_t val_size_class_1 = (class_1.size() * val_size) / 100;
+    size_t val_size_class_2 = (class_2.size() * val_size) / 100;
+
+    rapidcsv::Document valDoc("", rapidcsv::LabelParams(-1, -1));
+    rapidcsv::Document trainDoc("", rapidcsv::LabelParams(-1, -1));
+
+    size_t i         = 0;
+    size_t i_class_1 = 0;
+    size_t i_class_2 = 0;
+
+    while (i < val_size_class_1)
+    {
+        valDoc.SetRow(i, shuffled_doc.GetRow<std::string>(class_1[i_class_1++]));
+        ++i;
+    }
+    while (i < val_size_class_2 + val_size_class_1)
+    {
+        valDoc.SetRow(i, shuffled_doc.GetRow<std::string>(class_2[i_class_2++]));
+        ++i;
+
+    }
+
+    size_t size_class1 = class_1.size() - i_class_1;
+    size_t size_class2 = class_2.size() - i_class_2;
+
+    i = 0;
+    while (i < size_class1) {
+        trainDoc.SetRow(i, shuffled_doc.GetRow<std::string>(class_1[i_class_1++]));
+        ++i;
+    }
+    while (i < size_class1 + size_class2) {
+        trainDoc.SetRow(i, shuffled_doc.GetRow<std::string>(class_2[i_class_2++]));
+        ++i;
+    }
+    return {trainDoc, valDoc};
 }
+
 
 void    save_scale(rapidcsv::Document& doc)
 {
@@ -70,6 +99,12 @@ void save_split_scaler(const std::string& path, size_t val_size)
     rapidcsv::Document doc(path, rapidcsv::LabelParams(-1, -1));
 
     rapidcsv::Document shuffled_doc = shuffle_rows(doc);
-    save_split(shuffled_doc, val_size);
-    save_scale(shuffled_doc); 
+    
+    auto train_val = train_val_split(shuffled_doc, val_size);
+    
+    train_val.first.Save("data/data_train.csv");
+    train_val.second.Save("data/data_val.csv");
+    std::cout << "train/valid split saved in data/\n";
+
+    save_scale(train_val.first);
 }

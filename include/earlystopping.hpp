@@ -1,8 +1,11 @@
-#ifndef EARLYSTOPPING_HPP
-#define EARLYSTOPPING_HPP
+#pragma once
 
 #include <limits>
 #include <iostream>
+#include "layer.hpp"
+
+
+class MLPClassifier;
 
 class EarlyStopping
 {
@@ -12,10 +15,11 @@ class EarlyStopping
     unsigned char times;
     double        optimal_loss;
     bool          enabled;
+    bool          restore_best_weights;
 
-    EarlyStopping(bool enabled);
-    EarlyStopping(char patience, bool enabled);
-    bool operator()(double loss);
+    std::vector<Layer>  best_weights;
+
+    EarlyStopping(char patience, bool enabled, bool restore_best_weights);
+    bool operator()(double val_loss, MLPClassifier* model_ptr);
 };
 
-#endif

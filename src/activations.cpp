@@ -5,19 +5,19 @@ MatrixXd relu(const MatrixXd& m, bool derivative)
     if (!derivative)
         return m.cwiseMax(0.0f);
 
-    return (m.array() > 0.0).cast<double>().matrix();
+    return (m.array() > 0.0f).cast<double>().matrix();
 }
 
 MatrixXd sigmoid(const MatrixXd& m, bool derivative)
 {
     // σ(x)
-    MatrixXd s = 1.0 / (1.0 + (-m.array()).exp());
+    MatrixXd s = 1.0f / (1.0f + (-m.array()).exp());
 
     if (!derivative)
         return s;
 
     // derivative: σ(x) * (1 − σ(x))
-    return s.array() * (1.0 - s.array());
+    return s.array() * (1.0f - s.array());
 }
 
 MatrixXd softmax(const MatrixXd& x, bool derivative)
@@ -42,5 +42,5 @@ MatrixXd softmax(const MatrixXd& x, bool derivative)
         return probs;
 
     // simplified derivative (diagonal approximation)
-    return probs.array() * (1.0 - probs.array());
+    return probs.array() * (1.0f - probs.array());
 }

@@ -9,16 +9,15 @@ MatrixXd Initializer::random_init(unsigned int rows, unsigned int cols)
 
 MatrixXd Initializer::he_init(unsigned int rows, unsigned int cols)
 {
-    double std_dev = std::sqrt(2.0 / rows);
+    double std_dev = std::sqrt(2.0f / rows);
     MatrixXd m = MatrixXd(rows, cols);
     m = MatrixXd::Random(rows, cols) * std_dev;
     return  m;
 }
 
-
 MatrixXd Initializer::xavier_init(unsigned int rows, unsigned int cols)
 {
-    double std_dev = std::sqrt(2.0 / (rows + cols));
+    double std_dev = std::sqrt(2.0f / (rows + cols));
     MatrixXd m =  MatrixXd(rows, cols);
     m = MatrixXd::Random(rows, cols) * std_dev;
     return  m;

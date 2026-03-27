@@ -24,7 +24,7 @@ int cmd_split(const char *datapath, const char *val_str)
             std::cerr << "validation size between 5 and 20\n";
             return EXIT_FAILURE;
         }
-    
+        std::srand(42);
         save_split_scaler(datapath, val_size);
         return EXIT_SUCCESS;
     }

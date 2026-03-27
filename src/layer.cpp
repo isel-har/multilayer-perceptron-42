@@ -61,7 +61,7 @@ Layer::Layer(unsigned int input_shape,
     }
     else
     {
-        double std_dev = std::sqrt(2.0 / input_shape);
+        double std_dev = std::sqrt(2.0f / input_shape);
         this->weights = MatrixXd::Random(input_shape, size) * std_dev;
     }
 

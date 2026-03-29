@@ -22,7 +22,7 @@ bool EarlyStopping::operator()(double val_loss, MLPClassifier *model_ptr)
         times = 0;
 
         if (restore_best_weights) {
-            best_weights = model_ptr->get_weights(); 
+            best_weights = model_ptr->get_weights();
         }
     }
     else 

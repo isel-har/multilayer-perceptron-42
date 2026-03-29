@@ -7,12 +7,12 @@ std::unordered_map<std::string, Metric*> MLPClassifier::metricsMap = {
     // {"loss", new BinarycrossEntropy()}
 };
 
-MLPClassifier::MLPClassifier() : built(false), confptr(nullptr), earlystopping(20, false, false), loss(1e-15)
+MLPClassifier::MLPClassifier() : built(false), confptr(nullptr), earlystopping(20, false, false), loss(1e-15),use_class_weight(false)
 {
     // this->loss = new BinaryCrossEntropy(1e-15);
 }
 
-MLPClassifier::MLPClassifier(const json& conf) : built(false), earlystopping(20, false, false), loss(1e-15)
+MLPClassifier::MLPClassifier(const json& conf) : built(false), earlystopping(20, false, false), loss(1e-15),use_class_weight(false)
 {
     // this->loss    = new BinaryCrossEntropy(1e-15);
     this->confptr = &conf;
@@ -107,7 +107,12 @@ void MLPClassifier::build(unsigned int shape)
         this->earlystopping.restore_best_weights = conf.value("restore_best_weights", false);
         std::cout << "early stopping enabled with patience :" << this->earlystopping._patience << "\n";
     }
-
+    // this->use_class_weight = conf.value("use_class_weight", false);
+    // if (this->use_class_weight) {
+    //     use_class_weight = true;
+    //     for (auto& [key, val] : config["class_weight"].items())
+    //         class_weight[std::stoi(key)] = val.get<double>();
+    // }
     std::vector<std::string> metrics = conf.value("metrics", std::vector<std::string>({}));
     checked_range(metrics.size(), (size_t)0, (size_t)4, "metrics_size");
 
@@ -156,6 +161,19 @@ MatrixXd MLPClassifier::feed(const MatrixXd& x)
 void MLPClassifier::backward(const MatrixXd& probs, const MatrixXd&ybatch)
 {
     auto dlout = this->loss.backward(probs, ybatch);
+
+    if (this->use_class_weight) {
+    // This creates the weight vector in one go without a manual loop
+        VectorXd weights = (ybatch.col(0).array() == 1.0).select(
+            VectorXd::Constant(ybatch.rows(), this->class_weights.first),
+            VectorXd::Constant(ybatch.rows(), this->class_weights.second)
+        );
+
+        // Apply weights
+        dlout = dlout.array().colwise() * weights.array();
+    }
+
+
     int  last   = (int)this->layers.size() - 1;
     for (; last >= 0; --last)
     {
@@ -198,7 +216,7 @@ History MLPClassifier::fit(const DatasetSplit& dataset)
 
 
     unsigned int                 e = 1;
-    double      current_val_loss = 0.0;
+    double      current_val_loss   = 0.0;
 
     while (e <= epochs)
     {
@@ -324,6 +342,20 @@ void    MLPClassifier::clean_static_var() {
         delete vec;
     }
 }
+// auto calculate_weights = [&](const MatrixXd& y) {
+//     double total = y.rows();
+//     double pos_count = (y.array() == 1.0).count();
+//     double neg_count = total - pos_count; // More efficient than a second scan
+
+//     return std::make_pair(total / (2.0 * pos_count), total / (2.0 * neg_count));
+// };
+// auto weights = calculate_weights(datasplit.y_train);
+
+void  MLPClassifier::set_class_weights(const std::pair<double, double> &class_weights) {
+    this->class_weights    = class_weights;
+    this->use_class_weight = true;
+}
+
 
 void MLPClassifier::set_weights(const std::vector<Layer> &new_layers)
 {

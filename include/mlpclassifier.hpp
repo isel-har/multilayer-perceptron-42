@@ -28,8 +28,7 @@ class MLPClassifier
   unsigned int batch_size;
   unsigned int input_shape;
   bool         built;
-
-
+  
   std::vector<Layer>                           layers;
   
   Optimizer*    optimizer = nullptr;
@@ -38,30 +37,34 @@ class MLPClassifier
   EarlyStopping       earlystopping;
   BinaryCrossEntropy  loss;
 
+  bool use_class_weight;
+  std::pair<double, double> class_weights;
+  
   MatrixXd feed(const MatrixXd&);
   void     backward(const MatrixXd&, const MatrixXd&);
-  
   public:
     std::vector<std::pair<std::string, Metric*>> metrics;
     MLPClassifier();
     MLPClassifier(const json&);
     ~MLPClassifier();
 
+    History fit(const DatasetSplit&);
     void    load(const std::string &model_path);
     void    save(const std::string &name) const;
     void    build(unsigned int);
-    History fit(const DatasetSplit&);
 
 
     void                      set_weights(const std::vector<Layer> &);
     std::vector<Layer>        get_weights() const;
 
-    std::vector<json> default_layers();
+    std::vector<json>         default_layers();
 
     MatrixXd argmax(const MatrixXd&) const;
     MatrixXd predict(const MatrixXd& x, bool argmaxed);
 
-    void train_val_metrics(unsigned int epoch, const DatasetSplit& dataset, History& history);
+    void  set_class_weights(const std::pair<double, double> &class_weights);
+    void  train_val_metrics(unsigned int epoch, const DatasetSplit& dataset, History& history);
+  
     static void safe_read(std::ifstream& file, char* buffer, std::size_t size);
     static void clean_static_var();
 };

@@ -9,8 +9,6 @@ rapidcsv::Document shuffle_rows(const rapidcsv::Document& doc)
     std::vector<size_t> indices(rowCount);
     std::iota(indices.begin(), indices.end(), 0);
 
-
-    // std::random_device rd;
     std::mt19937 g(42);
     std::shuffle(indices.begin(), indices.end(), g);
 
@@ -19,6 +17,50 @@ rapidcsv::Document shuffle_rows(const rapidcsv::Document& doc)
 
     return shuffled_doc;
 }
+
+
+void oversample_minority(rapidcsv::Document& trainDoc)
+{
+    std::vector<char> y = trainDoc.GetColumn<char>(1);
+
+    std::vector<size_t> class_M, class_B;
+
+    for (size_t i = 0; i < y.size(); ++i)
+    {
+        if (y[i] == 'M')
+            class_M.push_back(i);
+        else
+            class_B.push_back(i);
+    }
+
+    std::vector<size_t>* minority;
+    std::vector<size_t>* majority;
+
+    if (class_M.size() < class_B.size())
+    {
+        minority = &class_M;
+        majority = &class_B;
+    }
+    else
+    {
+        minority = &class_B;
+        majority = &class_M;
+    }
+
+    size_t diff = majority->size() - minority->size();
+
+    std::mt19937 gen(42);
+    std::uniform_int_distribution<> dist(0, minority->size() - 1);
+
+    size_t current_size = trainDoc.GetRowCount();
+
+    for (size_t i = 0; i < diff; ++i)
+    {
+        size_t idx = (*minority)[dist(gen)];
+        trainDoc.SetRow(current_size + i, trainDoc.GetRow<std::string>(idx));
+    }
+}
+
 
 std::pair<rapidcsv::Document, rapidcsv::Document> train_val_split(const rapidcsv::Document& shuffled_doc, size_t val_size)
 {
@@ -101,11 +143,12 @@ void save_split_scaler(const std::string& path, size_t val_size)
 
     rapidcsv::Document shuffled_doc = shuffle_rows(doc);
     
-    auto train_val = train_val_split(shuffled_doc, val_size);
-    
-    train_val.first.Save("data/data_train.csv");
-    train_val.second.Save("data/data_val.csv");
-    std::cout << "train/valid split saved in data/\n";
+    auto train_val_pair = train_val_split(shuffled_doc, val_size);
+    // oversample_minority(train_val_pair.first);
+    // std::cout << "col size oversampled:"<< train_val_pair.first.GetColumnCount() << "\n";
+    train_val_pair.first.Save("data/data_train.csv");
+    train_val_pair.second.Save("data/data_val.csv");
 
-    save_scale(train_val.first);
+    save_scale(train_val_pair.first);
+    std::cout << "train/valid split saved in data/\n";
 }

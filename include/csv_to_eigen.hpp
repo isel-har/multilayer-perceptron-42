@@ -4,6 +4,7 @@
 #include "rapidcsv.h"
 #include "scaler.hpp"
 
+#include <string>
 #include <Eigen/Dense>
 #include <utility>
 

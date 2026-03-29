@@ -8,36 +8,35 @@ EarlyStopping::EarlyStopping(char patience, bool enabled, bool restore_best_weig
     : _enabled(enabled),
     _patience(patience),
     optimal_loss(std::numeric_limits<double>::max()),
-    restore_best_weights(restore_best_weights)
+    restore_best_weights(restore_best_weights),
+    _min_delta(0.001)
 {
 }
-
 bool EarlyStopping::operator()(double val_loss, MLPClassifier *model_ptr)
 {
-    // if (model_ptr == nullptr)
-    //     throw std::runtime_error("model object cannot be a null pointer");
+    if (!_enabled) return false;
 
-    if (!_enabled)
-        return false;
-    
-    if (val_loss < optimal_loss)
+    if (val_loss < (optimal_loss - _min_delta)) 
     {
-        if (this->restore_best_weights == true)
-        {
-            this->best_weights = model_ptr->get_weights();
+        optimal_loss = val_loss;
+        times = 0;
+
+        if (restore_best_weights) {
+            best_weights = model_ptr->get_weights(); 
         }
-        this->optimal_loss = val_loss;
-        this->times        = 0;
     }
-    else
-        ++this->times;
-    if (this->times >= this->_patience)
+    else 
     {
-        std::cout << "training loop stopped by early-stopping\n";
-        if (this->restore_best_weights == true)
-            model_ptr->set_weights(this->best_weights);
-
-        return true;
+        ++times;
     }
+
+    if (times >= _patience) 
+    {
+        if (restore_best_weights && !best_weights.empty()) {
+            model_ptr->set_weights(std::move(best_weights));
+        }
+        return true; // Stop training
+    }
+
     return false;
 }

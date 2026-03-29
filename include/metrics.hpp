@@ -5,8 +5,6 @@
 #include <cmath>
 #include <iostream>
 
-// difference between metrics, when use argmax and why, when use actual probs!!!
-
 class Metric
 {
   public:
@@ -24,13 +22,6 @@ class Precision : public Metric
 {
   public:
     double compute(const Eigen::MatrixXd&, const Eigen::MatrixXd&) const override;
-};
-
-class BinarycrossEntropy : public Metric
-{
-  public:
-    double compute(const Eigen::MatrixXd&, const Eigen::MatrixXd&) const override;
-    // double compute(const Eigen::MatrixXd&, const Eigen::MatrixXd&) const override;
 };
 
 #endif

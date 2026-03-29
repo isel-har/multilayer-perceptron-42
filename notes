@@ -1,3 +1,5 @@
 - layer base class
 - Dropout
 - BinaryCrossEntropy derivative and loss
+
+0.106133

@@ -7,9 +7,9 @@
         "optimizer": "adam",
         "metrics": ["accuracy", "precision"],
         "hidden_layers": [
-            { "size": 128, "initializer": "he", "activation": "relu"},
-            { "size": 64, "initializer": "he", "activation": "relu" },
-            { "size": 32, "initializer": "he", "activation": "relu" }
+            { "size": 64, "initializer": "xavier", "activation": "sigmoid" },
+            { "size": 32, "initializer": "he", "activation": "relu" },
+            { "size": 16, "initializer": "he", "activation": "relu" }
         ]
     }
 ]

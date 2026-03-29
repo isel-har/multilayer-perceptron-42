@@ -1,21 +1,26 @@
 #include "mlpclassifier.hpp"
 
+
 std::unordered_map<std::string, Metric*> MLPClassifier::metricsMap = {
     {"accuracy", new Accuracy()},
     {"precision", new Precision()},
-    {"loss", new BinarycrossEntropy()}
+    // {"loss", new BinarycrossEntropy()}
 };
 
-MLPClassifier::MLPClassifier() : built(false), confptr(nullptr), earlystopping(20, false, false)
-{}
-
-MLPClassifier::MLPClassifier(const json& conf) : built(false), earlystopping(20, false, false)
+MLPClassifier::MLPClassifier() : built(false), confptr(nullptr), earlystopping(20, false, false), loss(1e-15)
 {
+    // this->loss = new BinaryCrossEntropy(1e-15);
+}
+
+MLPClassifier::MLPClassifier(const json& conf) : built(false), earlystopping(20, false, false), loss(1e-15)
+{
+    // this->loss    = new BinaryCrossEntropy(1e-15);
     this->confptr = &conf;
 }
 
 MLPClassifier::~MLPClassifier()
 {
+    // delete this->loss;
     delete this->optimizer;
     for (size_t i = 0; i < this->metrics.size(); ++i)
     {
@@ -34,9 +39,10 @@ void MLPClassifier::train_val_metrics(unsigned int epoch, const DatasetSplit& da
 
     std::cout << "epoch " << epoch << '/' << this->epochs;
 
-    double loss     = this->metricsMap["loss"]->compute(ypred_train, dataset.y_train);
-    double loss_val = this->metricsMap["loss"]->compute(ypred_val, dataset.y_val);
-    history.vecMap["loss"].first[index]  = loss;
+    double loss_     = this->loss.forward(ypred_train, dataset.y_train);
+    double loss_val  = this->loss.forward(ypred_val, dataset.y_val);
+
+    history.vecMap["loss"].first[index]  = loss_;
     history.vecMap["loss"].second[index] = loss_val;
 
     for (auto& [name, vec] : history.vecMap)
@@ -45,12 +51,12 @@ void MLPClassifier::train_val_metrics(unsigned int epoch, const DatasetSplit& da
         {
             double metric_train     = this->metricsMap[name]->compute(ypmax_train, dataset.y_train);
             double metric_val       = this->metricsMap[name]->compute(ypmax_val, dataset.y_val);
-            vec.first.at(index) = metric_train;
-            vec.second.at(index) = metric_val;
+            vec.first.at(index)     = metric_train;
+            vec.second.at(index)    = metric_val;
         }
     }
 
-    std::cout << "- loss:" << loss;
+    std::cout << "- loss:" << loss_;
     for (const auto& metric : this->metrics)
     {
         double metric_ = history.vecMap[metric.first].first.at(index);
@@ -147,14 +153,15 @@ MatrixXd MLPClassifier::feed(const MatrixXd& x)
     return feed;
 }
 
-void MLPClassifier::backward(const MatrixXd& dl_out)
+void MLPClassifier::backward(const MatrixXd& probs, const MatrixXd&ybatch)
 {
-    int      last  = (int) this->layers.size() - 1;
-    MatrixXd dloss = dl_out;
+    auto dlout = this->loss.backward(probs, ybatch);
+    int  last   = (int)this->layers.size() - 1;
     for (; last >= 0; --last)
     {
-        dloss = this->layers[last].backward(dloss);
+        dlout = this->layers[last].backward(dlout);
     }
+    this->optimizer->update(this->layers);
 }
 // MatrixXd MLPClassifier::argmax(const MatrixXd& y_probs) const
 // {
@@ -188,10 +195,12 @@ History MLPClassifier::fit(const DatasetSplit& dataset)
         throw std::runtime_error("input shape must be equal to given input cols");
 
     History history(this->epochs);
-    unsigned int e = 1;
-    double      loss_e = 0.0;
 
-    while (e <= epochs && !earlystopping(loss_e, this))
+
+    unsigned int                 e = 1;
+    double      current_val_loss = 0.0;
+
+    while (e <= epochs)
     {
         for (unsigned int i = 0; i < (unsigned int) dataset.X_train.rows(); i += batch_size)
         {
@@ -199,15 +208,15 @@ History MLPClassifier::fit(const DatasetSplit& dataset)
     
             MatrixXd xbatch = dataset.X_train.middleRows(i, end - i);
             MatrixXd ybatch = dataset.y_train.middleRows(i, end - i);
-    
-            MatrixXd probs = this->feed(xbatch);
-            MatrixXd loss  = (probs.array() - ybatch.array()).matrix();
-    
-            this->backward(loss);
-            this->optimizer->update(this->layers);
+            MatrixXd probs  = this->feed(xbatch);
+            this->backward(probs, ybatch);
         }
         this->train_val_metrics(e, dataset, history);
-        loss_e = history.vecMap["loss"].second[e - 1];
+        current_val_loss = history.vecMap["loss"].second[e - 1];
+        if (earlystopping(current_val_loss, this)) {
+            std::cout << "Early stopping triggered at epoch " << e << std::endl;
+            break;
+        }
         ++e;
     }
     return history;
@@ -316,16 +325,18 @@ void    MLPClassifier::clean_static_var() {
     }
 }
 
-void    MLPClassifier::set_weights(const std::vector<Layer> &layers)
+void MLPClassifier::set_weights(const std::vector<Layer> &new_layers)
 {
+    if (new_layers.size() != this->layers.size()) return;
+
     for (size_t i = 0; i < this->layers.size(); ++i)
     {
-            this->layers[i].weights = layers[i].weights;
-            this->layers[i].biases  = layers[i].biases;
+        this->layers[i].weights = new_layers[i].weights;
+        this->layers[i].biases  = new_layers[i].biases;
     }
 }
 
-const std::vector<Layer> &MLPClassifier::get_weights() const
+std::vector<Layer> MLPClassifier::get_weights() const
 {
     return this->layers;
 }

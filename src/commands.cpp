@@ -24,7 +24,7 @@ int cmd_split(const char *datapath, const char *val_str)
             std::cerr << "validation size between 5 and 20\n";
             return EXIT_FAILURE;
         }
-        std::srand(42);
+        // std::srand(42);
         save_split_scaler(datapath, val_size);
         return EXIT_SUCCESS;
     }
@@ -132,12 +132,12 @@ int cmd_predict(const char* datapath)
         MatrixXd  X      = doc_to_eigen(doc);
         scaler.transform(X);
 
-        auto bce = BinarycrossEntropy();
+        auto bce = BinaryCrossEntropy(1e-15);
         for (size_t i = 0; i < models.size(); ++i) {
 
             auto Y_pred = models[i].predict(X, false);
-            double loss = bce.compute(Y_pred, Y_true);
-            std::cout << "model "<< i + 1 <<" loss evaluation :" << loss << "\n";
+            double loss = bce.forward(Y_pred, Y_true);
+            std::cout << "model " << i + 1 << " loss evaluation :" << loss << "\n";
         }
         return EXIT_SUCCESS;
     } 

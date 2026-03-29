@@ -9,8 +9,9 @@ rapidcsv::Document shuffle_rows(const rapidcsv::Document& doc)
     std::vector<size_t> indices(rowCount);
     std::iota(indices.begin(), indices.end(), 0);
 
-    std::random_device rd;
-    std::mt19937 g(rd());
+
+    // std::random_device rd;
+    std::mt19937 g(42);
     std::shuffle(indices.begin(), indices.end(), g);
 
     for (size_t i = 0; i < rowCount; ++i)

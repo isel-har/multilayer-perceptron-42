@@ -1,22 +1,22 @@
-#pragma once
+// #pragma once
 
-#include "base_layer.hpp"
-// #include <Eigen/Dense>
+// // #include "base_layer.hpp"
+// // #include <Eigen/Dense>
 
-// using namespace Eigen;
+// // using namespace Eigen;
 
-class Dropout : public BaseLayer
-{
-public:
+// class Dropout : public BaseLayer
+// {
+// public:
 
-    float           rate;
-    float           keep_prob;
-    bool            training_phase;
-    MatrixXd        mask;
+//     float           rate;
+//     float           keep_prob;
+//     bool            training;
+//     MatrixXd        mask;
 
-    Dropout(float rate);
+//     Dropout(float rate);
 
-    MatrixXd    forward(const MatrixXd &);
-    MatrixXd    backward(const MatrixXd &);
-};
+//     MatrixXd    forward(const MatrixXd &);
+//     MatrixXd    backward(const MatrixXd &);
+// };
 

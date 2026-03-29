@@ -11,7 +11,8 @@
 #include "json_loader.hpp"
 #include "visualizer.hpp"
 #include "save_split_scaler.hpp"
-#include "metrics.hpp"
+// #include "metrics.hpp"
+#include "binary_cross_entropy.hpp"
 
 namespace fs = std::filesystem;
 

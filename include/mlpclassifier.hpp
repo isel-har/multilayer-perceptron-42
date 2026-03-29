@@ -8,7 +8,7 @@
 #include "metrics.hpp"
 #include "optimizers.hpp"
 #include "checker.tpp"
-
+#include "binary_cross_entropy.hpp"
 
 #include <algorithm>
 #include <exception>
@@ -34,10 +34,12 @@ class MLPClassifier
   
   Optimizer*    optimizer = nullptr;
   const json*   confptr   = nullptr;
-  EarlyStopping earlystopping;
   
+  EarlyStopping       earlystopping;
+  BinaryCrossEntropy  loss;
+
   MatrixXd feed(const MatrixXd&);
-  void     backward(const MatrixXd&);
+  void     backward(const MatrixXd&, const MatrixXd&);
   
   public:
     std::vector<std::pair<std::string, Metric*>> metrics;
@@ -52,7 +54,7 @@ class MLPClassifier
 
 
     void                      set_weights(const std::vector<Layer> &);
-    const std::vector<Layer>  &get_weights() const;
+    std::vector<Layer>        get_weights() const;
 
     std::vector<json> default_layers();
 

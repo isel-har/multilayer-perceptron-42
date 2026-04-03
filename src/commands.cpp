@@ -26,6 +26,8 @@ int cmd_split(const char *datapath, const char *val_str)
         }
         // std::srand(42);
         save_split_scaler(datapath, val_size);
+        MLPClassifier::clean_static_var();
+
         return EXIT_SUCCESS;
     }
     catch (const std::exception &e) {
@@ -44,25 +46,9 @@ int cmd_train(const char* config_path)
         std::vector<MLPClassifier> models;
         std::vector<History>       histories;
         
-        //(y_probs.col(0).array() > y_probs.col(1).array());
-        
-        std::pair<double, double> class_weights;
-        double n_classes = 2.0;
-        // (m.array() == valueToCount).count();
-        // Assuming datasplit.y_train is a MatrixXd with 1 column of labels (0.0 and 1.0)
-        double N = static_cast<double>(datasplit.y_train.rows());
-        // Count occurrences using Eigen's boolean reductions
-        double count_1 = static_cast<double>((datasplit.y_train.col(0).array() == 1.0).count());
-        double count_0 = static_cast<double>((datasplit.y_train.col(0).array() == 0.0).count());
-        /*  */
-        class_weights.first = N / (n_classes * count_1);
-        class_weights.second = N / (n_classes * count_0);
-        // Formula: w = N / (n_classes * count_j)
-        // Weight for Class 1 (Minority/Positive)
-        // Weight for Class 0 (Majority/Negative)
-
-     
         std::srand(42);
+        std::pair<double, double> class_weight = compute_binary_class_weight(datasplit.y_train);
+
         if (!models_json.size())
             models.emplace_back(models_json);
         else
@@ -77,7 +63,7 @@ int cmd_train(const char* config_path)
         for (size_t i = 0; i < models.size(); i++)
         {
             std::cout << "model ______________[" << i + 1 << "]______________\n";
-    
+            models[i].set_class_weights(class_weight);
             models[i].build(input_shape);
             histories.push_back(models[i].fit(datasplit));
             models[i].save("model_" + std::to_string(i + 1) + ".bin");
@@ -100,9 +86,9 @@ int cmd_train(const char* config_path)
             ylabels.push_back(metric);
         }
 
-        // Visualizer::multi_figures(figures, ylabels);
+        Visualizer::multi_figures(figures, ylabels);
         // plt::clear();
-        // Visualizer::show();
+        Visualizer::show();
 
         /*cleaning*/
         MLPClassifier::clean_static_var();
@@ -156,6 +142,7 @@ int cmd_predict(const char* datapath)
             double loss = bce.forward(Y_pred, Y_true);
             std::cout << "model " << i + 1 << " loss evaluation :" << loss << "\n";
         }
+        MLPClassifier::clean_static_var();
         return EXIT_SUCCESS;
     } 
     catch (const std::exception &e) {

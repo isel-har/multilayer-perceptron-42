@@ -151,4 +151,5 @@ void save_split_scaler(const std::string& path, size_t val_size)
 
     save_scale(train_val_pair.first);
     std::cout << "train/valid split saved in data/\n";
+    
 }

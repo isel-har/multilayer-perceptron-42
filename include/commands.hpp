@@ -13,6 +13,8 @@
 #include "save_split_scaler.hpp"
 // #include "metrics.hpp"
 #include "binary_cross_entropy.hpp"
+#include "class_weight.hpp"
+
 
 namespace fs = std::filesystem;
 

@@ -168,11 +168,9 @@ void MLPClassifier::backward(const MatrixXd& probs, const MatrixXd&ybatch)
             VectorXd::Constant(ybatch.rows(), this->class_weights.first),
             VectorXd::Constant(ybatch.rows(), this->class_weights.second)
         );
-
         // Apply weights
         dlout = dlout.array().colwise() * weights.array();
     }
-
 
     int  last   = (int)this->layers.size() - 1;
     for (; last >= 0; --last)

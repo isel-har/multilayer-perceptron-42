@@ -53,6 +53,9 @@ int cmd_train(const char* config_path)
             models.emplace_back(models_json);
         else
         {
+            if (models_json.size() > 5)
+                throw std::runtime_error("too many model objects (max 5 models).");
+
             for (const auto& jmodel : models_json)
                 models.emplace_back(jmodel);
         }
@@ -129,7 +132,10 @@ int cmd_predict(const char* datapath)
             models.emplace_back();
             models.back().load(path);
         }
-        
+        if (models.size() == 0) {
+            std::cout << "no model to evaluate, model*.bin file required\n";
+            return EXIT_SUCCESS;
+        }
         MatrixXd  Y_true = doc_to_eigen_encoded(doc);
         doc.RemoveColumn(1);
         MatrixXd  X      = doc_to_eigen(doc);

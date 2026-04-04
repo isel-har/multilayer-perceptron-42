@@ -12,7 +12,6 @@ Scaler::Scaler(const std::string& params_path)
     int size;
     params_file.read(reinterpret_cast<char*>(&size), sizeof(int));
     mean = RowVectorXd(1, size);
-    std::cout << mean.size() << "\n";  
     std_dev  = RowVectorXd(1, size);
     params_file.read(reinterpret_cast<char*>(mean.data()), size * sizeof(double));
     params_file.read(reinterpret_cast<char*>(std_dev.data()), size * sizeof(double));

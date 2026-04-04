@@ -1,21 +1,20 @@
 [
     {
-        "batch_size": 32,
-        "epochs": 500,
+        "batch_size": 16,
+        "epochs": 100,
         "learning_rate": 0.001,
-        "early_stopping_patience": 42,
-        "restore_best_weights": true,
+        "early_stopping_patience": 20,
         "optimizer": "adam",
         "metrics": ["accuracy", "precision"],
         "hidden_layers": [
-            { "size": 64, "initializer": "xavier", "activation": "sigmoid" },
+            { "size": 64, "initializer": "he", "activation": "relu" },
             { "size": 32, "initializer": "he", "activation": "relu" },
             { "size": 16, "initializer": "he", "activation": "relu" }
         ]
     },
     {
         "batch_size": 16,
-        "epochs": 20,
+        "epochs": 40,
         "learning_rate": 0.001,
         "optimizer": "adam",
         "metrics": ["accuracy", "precision"],

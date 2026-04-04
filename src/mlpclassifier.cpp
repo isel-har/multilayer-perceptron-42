@@ -75,16 +75,16 @@ void MLPClassifier::train_val_metrics(unsigned int epoch, const DatasetSplit& da
 
 std::vector<json> MLPClassifier::default_layers()
 {
+    std::cout << "no provided hidden layers in config.json\n";
+    std::cout << "creating default hidden layers\n";
+
     std::vector<json> jlayers;
     json              hidden;
 
-    hidden["size"]       = 16;
+    hidden["size"]       = 32;
     hidden["activation"] = "relu";
     jlayers.push_back(hidden);
-    hidden["size"] = 8;
-    jlayers.push_back(hidden);
-    hidden["activation"] = "softmax";
-    hidden["size"] = 2;
+    hidden["size"] = 16;
     jlayers.push_back(hidden);
     return jlayers;
 }
@@ -107,12 +107,6 @@ void MLPClassifier::build(unsigned int shape)
         this->earlystopping.restore_best_weights = conf.value("restore_best_weights", false);
         std::cout << "early stopping enabled with patience :" << this->earlystopping._patience << "\n";
     }
-    // this->use_class_weight = conf.value("use_class_weight", false);
-    // if (this->use_class_weight) {
-    //     use_class_weight = true;
-    //     for (auto& [key, val] : config["class_weight"].items())
-    //         class_weight[std::stoi(key)] = val.get<double>();
-    // }
     std::vector<std::string> metrics = conf.value("metrics", std::vector<std::string>({}));
     checked_range(metrics.size(), (size_t)0, (size_t)4, "metrics_size");
 
@@ -125,9 +119,16 @@ void MLPClassifier::build(unsigned int shape)
             this->metrics.push_back(std::make_pair(metric, MLPClassifier::metricsMap[metric]));
         }
     }
-    std::vector<json> layers_json = conf.value("hidden_layers", this->default_layers()); // default two hidden layers + output layer
-    checked_range(layers_json.size(), (size_t)1, (size_t)11, "layers_stack_size");
-    checked_layers(layers_json);
+    std::vector<json> layers_json;
+    if (conf.contains("hidden_layers")) {
+        layers_json = conf["hidden_layers"];
+    } else {
+        layers_json = this->default_layers();
+        checked_range(layers_json.size(), (size_t)1, (size_t)11, "layers_stack_size");
+        checked_layers(layers_json);
+    }
+
+    // layers_json = conf.value("hidden_layers", this->default_layers());
     
     this->layers.emplace_back(layers_json[0], shape);
     for (size_t i = 1; i < layers_json.size(); ++i)

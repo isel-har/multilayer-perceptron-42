@@ -1,0 +1,187 @@
+keras loss : 0.10610727220773697
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+model 1 loss evaluation :0.0806541
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0723297
+model 2 loss evaluation :0.0796187
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0816467
+model 2 loss evaluation :0.0982091
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0835141
+model 2 loss evaluation :0.0782211
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0684808
+model 2 loss evaluation :0.0749836
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.132414
+model 2 loss evaluation :0.139677
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0626385
+model 2 loss evaluation :0.0394298
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0568825
+model 2 loss evaluation :0.0556794
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.117555
+model 2 loss evaluation :0.121778
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0755772
+model 2 loss evaluation :0.0656783
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.065904
+model 2 loss evaluation :0.0427455
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.10854
+model 2 loss evaluation :0.0882221
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0927497
+model 2 loss evaluation :0.0990534
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0951402
+model 2 loss evaluation :0.0789453
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.110058
+model 2 loss evaluation :0.124006
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0407874
+model 2 loss evaluation :0.024032
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0606457
+model 2 loss evaluation :0.0623726
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0652162
+model 2 loss evaluation :0.0551661
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0448524
+model 2 loss evaluation :0.0449132
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.106436
+model 2 loss evaluation :0.111877
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0770665
+model 2 loss evaluation :0.0759819
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0702221
+model 2 loss evaluation :0.101922
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.176586
+model 2 loss evaluation :0.225985
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.06485
+model 2 loss evaluation :0.0645579
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0890912
+model 2 loss evaluation :0.11563
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0953098
+model 2 loss evaluation :0.0925365
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0593186
+model 2 loss evaluation :0.045059
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0798706
+model 2 loss evaluation :0.0975418
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0807026
+model 2 loss evaluation :0.0676827
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0728342
+model 2 loss evaluation :0.0646866
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0805456
+model 2 loss evaluation :0.117809
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0916696
+model 2 loss evaluation :0.126388
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0702218
+model 2 loss evaluation :0.0572566
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.117584
+model 2 loss evaluation :0.109137
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0543946
+model 2 loss evaluation :0.0504627
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0879697
+model 2 loss evaluation :0.128601
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0973155
+model 2 loss evaluation :0.0899627
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0752521
+model 2 loss evaluation :0.06784
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0661312
+model 2 loss evaluation :0.0506363
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0678764
+model 2 loss evaluation :0.0666152
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0839894
+model 2 loss evaluation :0.0800588
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0638809
+model 2 loss evaluation :0.0546073
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.045894
+model 2 loss evaluation :0.0341241
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0876978
+model 2 loss evaluation :0.0722946
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0696707
+model 2 loss evaluation :0.0696065
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0783623
+model 2 loss evaluation :0.0993445
+'/home/isel-har/Documents/multilayer-perceptron-42/model_1.bin' loaded
+'/home/isel-har/Documents/multilayer-perceptron-42/model_2.bin' loaded
+model 1 loss evaluation :0.0533739
+model 2 loss evaluation :0.0379176

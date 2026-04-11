@@ -64,7 +64,7 @@ void oversample_minority(rapidcsv::Document& trainDoc)
 
 std::pair<rapidcsv::Document, rapidcsv::Document> train_val_split(const rapidcsv::Document& shuffled_doc, size_t val_size)
 {
-    std::vector<char> y = shuffled_doc.GetColumn<char>(1);
+    std::vector<char> y = shuffled_doc.GetColumn<char>(0);
     std::vector<size_t> class_1, class_2;
 
     for (size_t i = 0; i < y.size(); ++i)
@@ -115,7 +115,7 @@ std::pair<rapidcsv::Document, rapidcsv::Document> train_val_split(const rapidcsv
 
 void    save_scale(rapidcsv::Document& doc)
 {
-    doc.RemoveColumn(1);
+    doc.RemoveColumn(0);
     MatrixXd X = doc_to_eigen(doc);
     RowVectorXd mean     = X.colwise().mean();
     MatrixXd    centered = X.rowwise() - mean;
@@ -140,12 +140,9 @@ void    save_scale(rapidcsv::Document& doc)
 void save_split_scaler(const std::string& path, size_t val_size)
 {
     rapidcsv::Document doc(path, rapidcsv::LabelParams(-1, -1));
+    doc.RemoveColumn(0);
 
-    rapidcsv::Document shuffled_doc = shuffle_rows(doc);
-    
-    auto train_val_pair = train_val_split(shuffled_doc, val_size);
-    // oversample_minority(train_val_pair.first);
-    // std::cout << "col size oversampled:"<< train_val_pair.first.GetColumnCount() << "\n";
+    auto train_val_pair = train_val_split(doc, val_size);
     train_val_pair.first.Save("data/data_train.csv");
     train_val_pair.second.Save("data/data_val.csv");
 

@@ -68,30 +68,33 @@ int cmd_train(const char* config_path)
             std::cout << "model ______________[" << i + 1 << "]______________\n";
             models[i].set_class_weights(class_weight);
             models[i].build(input_shape);
+            /*
+                K-fold for each model
+            */
             histories.push_back(models[i].fit(datasplit));
             models[i].save("model_" + std::to_string(i + 1) + ".bin");
         }
     
-        std::vector<std::vector<PlotData>>  figures;
-        std::vector<std::string>            ylabels;
+        // std::vector<std::vector<PlotData>>  figures;
+        // std::vector<std::string>            ylabels;
     
-        std::vector<std::string> metrics({"loss", "accuracy"});
-        for (auto& metric : metrics)
-        {
-            std::vector<PlotData>   plots;
-            for (size_t i = 0; i < histories.size(); ++i)
-            {
-                std::string model_num = std::to_string(i + 1);
-                plots.emplace_back(metric + " train per epoch model:" + model_num, histories[i].vecMap[metric].first, "solid");
-                plots.emplace_back(metric + " val per epoch model:" + model_num, histories[i].vecMap[metric].second, "dashed");
-            }
-            figures.push_back(plots);
-            ylabels.push_back(metric);
-        }
+        // std::vector<std::string> metrics({"loss", "accuracy"});
+        // for (auto& metric : metrics)
+        // {
+        //     std::vector<PlotData>   plots;
+        //     for (size_t i = 0; i < histories.size(); ++i)
+        //     {
+        //         std::string model_num = std::to_string(i + 1);
+        //         plots.emplace_back(metric + " train per epoch model:" + model_num, histories[i].vecMap[metric].first, "solid");
+        //         plots.emplace_back(metric + " val per epoch model:" + model_num, histories[i].vecMap[metric].second, "dashed");
+        //     }
+        //     figures.push_back(plots);
+        //     ylabels.push_back(metric);
+        // }
 
-        Visualizer::multi_figures(figures, ylabels);
-        // plt::clear();
-        Visualizer::show();
+        // Visualizer::multi_figures(figures, ylabels);
+        // // plt::clear();
+        // Visualizer::show();
 
         /*cleaning*/
         MLPClassifier::clean_static_var();
@@ -112,6 +115,7 @@ int cmd_predict(const char* datapath)
     }
     try {
         rapidcsv::Document doc(datapath, rapidcsv::LabelParams(-1, -1));
+        doc.RemoveColumn(0);
         auto scaler = Scaler("scaler_params.bin");
         std::vector<MLPClassifier> models;
 
@@ -137,7 +141,7 @@ int cmd_predict(const char* datapath)
             return EXIT_SUCCESS;
         }
         MatrixXd  Y_true = doc_to_eigen_encoded(doc);
-        doc.RemoveColumn(1);
+        doc.RemoveColumn(0);
         MatrixXd  X      = doc_to_eigen(doc);
         scaler.transform(X);
 

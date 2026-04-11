@@ -7,14 +7,13 @@ std::unordered_map<std::string, Metric*> MLPClassifier::metricsMap = {
     // {"loss", new BinarycrossEntropy()}
 };
 
-MLPClassifier::MLPClassifier() : built(false), confptr(nullptr), earlystopping(20, false, false), loss(1e-15),use_class_weight(false)
+MLPClassifier::MLPClassifier() : built(false), confptr(nullptr), earlystopping(20, false, false), loss(1e-15),use_class_weight(false), l2(0.001)
 {
     // this->loss = new BinaryCrossEntropy(1e-15);
 }
 
-MLPClassifier::MLPClassifier(const json& conf) : built(false), earlystopping(20, false, false), loss(1e-15),use_class_weight(false)
+MLPClassifier::MLPClassifier(const json& conf) : built(false), earlystopping(20, false, false), loss(1e-15),use_class_weight(false), l2(0.001)
 {
-    // this->loss    = new BinaryCrossEntropy(1e-15);
     this->confptr = &conf;
 }
 
@@ -177,6 +176,7 @@ void MLPClassifier::backward(const MatrixXd& probs, const MatrixXd&ybatch)
     for (; last >= 0; --last)
     {
         dlout = this->layers[last].backward(dlout);
+        // this->layers[last].weights_gradients += this->l2.gradient(this->layers[last].weights);
     }
     this->optimizer->update(this->layers);
 }
@@ -341,14 +341,11 @@ void    MLPClassifier::clean_static_var() {
         delete vec;
     }
 }
-// auto calculate_weights = [&](const MatrixXd& y) {
-//     double total = y.rows();
-//     double pos_count = (y.array() == 1.0).count();
-//     double neg_count = total - pos_count; // More efficient than a second scan
+// void    MLPClassifier::set_l2(bool enable, double lambda_) 
+// {
 
-//     return std::make_pair(total / (2.0 * pos_count), total / (2.0 * neg_count));
-// };
-// auto weights = calculate_weights(datasplit.y_train);
+// }
+
 
 void  MLPClassifier::set_class_weights(const std::pair<double, double> &class_weights) {
     this->class_weights    = class_weights;

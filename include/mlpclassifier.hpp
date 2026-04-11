@@ -9,6 +9,7 @@
 #include "optimizers.hpp"
 #include "checker.tpp"
 #include "binary_cross_entropy.hpp"
+#include "regularizers.hpp"
 
 #include <algorithm>
 #include <exception>
@@ -37,7 +38,9 @@ class MLPClassifier
   EarlyStopping       earlystopping;
   BinaryCrossEntropy  loss;
 
-  bool use_class_weight;
+  bool                use_class_weight;
+  L2Regularizer       l2;
+
   std::pair<double, double> class_weights;
   
   MatrixXd feed(const MatrixXd&);
@@ -54,10 +57,12 @@ class MLPClassifier
     void    build(unsigned int);
 
 
+
+    // void                      set_l2(bool, double);
     void                      set_weights(const std::vector<Layer> &);
     std::vector<Layer>        get_weights() const;
-
     std::vector<json>         default_layers();
+
 
     MatrixXd argmax(const MatrixXd&) const;
     MatrixXd predict(const MatrixXd& x, bool argmaxed);

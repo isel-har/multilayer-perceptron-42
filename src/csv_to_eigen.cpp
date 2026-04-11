@@ -20,7 +20,7 @@ MatrixXd    doc_to_eigen(const rapidcsv::Document &doc)
 
 MatrixXd    doc_to_eigen_encoded(const rapidcsv::Document& doc)
 {
-    const std::vector<char>& yv = doc.GetColumn<char>(1);
+    const std::vector<char>& yv = doc.GetColumn<char>(0);
 
     MatrixXd Y = MatrixXd::Zero(yv.size(), 2);
     for (size_t i = 0; i < yv.size(); ++i)
@@ -42,8 +42,8 @@ DatasetSplit    train_val_split()
     datasplit.y_train = doc_to_eigen_encoded(trainDoc);
     datasplit.y_val   = doc_to_eigen_encoded(valDoc);
 
-    trainDoc.RemoveColumn(1);
-    valDoc.RemoveColumn(1);
+    trainDoc.RemoveColumn(0);
+    valDoc.RemoveColumn(0);
 
     datasplit.X_train = doc_to_eigen(trainDoc);
     datasplit.X_val   = doc_to_eigen(valDoc);
